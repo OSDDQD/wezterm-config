@@ -1,94 +1,86 @@
--- A slightly altered version of catppucchin mocha
+-- Dracula+ color scheme (adapted from Windows Terminal)
 -- stylua: ignore
-local mocha = {
-   rosewater = '#f5e0dc',
-   flamingo  = '#f2cdcd',
-   pink      = '#f5c2e7',
-   mauve     = '#cba6f7',
-   red       = '#f38ba8',
-   maroon    = '#eba0ac',
-   peach     = '#fab387',
-   yellow    = '#f9e2af',
-   green     = '#a6e3a1',
-   teal      = '#94e2d5',
-   sky       = '#89dceb',
-   sapphire  = '#74c7ec',
-   blue      = '#89b4fa',
-   lavender  = '#b4befe',
-   text      = '#cdd6f4',
-   subtext1  = '#bac2de',
-   subtext0  = '#a6adc8',
-   overlay2  = '#9399b2',
-   overlay1  = '#7f849c',
-   overlay0  = '#6c7086',
-   surface2  = '#585b70',
-   surface1  = '#45475a',
-   surface0  = '#313244',
-   base      = '#1f1f28',
-   mantle    = '#181825',
-   crust     = '#11111b',
+local dracula = {
+   background    = '#212121',
+   foreground    = '#F8F8F2',
+   cursor_bg     = '#ECEFF4',
+   cursor_border = '#ECEFF4',
+   cursor_fg     = '#212121',
+   selection_bg  = '#44475A',
+   selection_fg  = '#F8F8F2',
+   black         = '#21222C',
+   red           = '#FF5555',
+   green         = '#50FA7B',
+   yellow        = '#FFCB6B',
+   blue          = '#82AAFF',
+   purple        = '#C792EA',
+   cyan          = '#8BE9FD',
+   white         = '#F8F8F2',
+   bright_black  = '#545454',
+   bright_red    = '#FF6E6E',
+   bright_green  = '#69FF94',
+   bright_yellow = '#FFCB6B',
+   bright_blue   = '#D6ACFF',
+   bright_purple = '#FF92DF',
+   bright_cyan   = '#A4FFFF',
+   bright_white  = '#F8F8F2',
 }
 
 local colorscheme = {
-   foreground = mocha.text,
-   background = mocha.base,
-   cursor_bg = mocha.rosewater,
-   cursor_border = mocha.rosewater,
-   cursor_fg = mocha.crust,
-   selection_bg = mocha.surface2,
-   selection_fg = mocha.text,
+   foreground = dracula.foreground,
+   background = dracula.background,
+   cursor_bg = dracula.cursor_bg,
+   cursor_border = dracula.cursor_border,
+   cursor_fg = dracula.cursor_fg,
+   selection_bg = dracula.selection_bg,
+   selection_fg = dracula.selection_fg,
    ansi = {
-      '#0C0C0C', -- black
-      '#C50F1F', -- red
-      '#13A10E', -- green
-      '#C19C00', -- yellow
-      '#0037DA', -- blue
-      '#881798', -- magenta/purple
-      '#3A96DD', -- cyan
-      '#CCCCCC', -- white
+      dracula.black,        -- black
+      dracula.red,          -- red
+      dracula.green,        -- green
+      dracula.yellow,       -- yellow
+      dracula.blue,         -- blue
+      dracula.purple,       -- magenta/purple
+      dracula.cyan,         -- cyan
+      dracula.white,        -- white
    },
    brights = {
-      '#767676', -- black
-      '#E74856', -- red
-      '#16C60C', -- green
-      '#F9F1A5', -- yellow
-      '#3B78FF', -- blue
-      '#B4009E', -- magenta/purple
-      '#61D6D6', -- cyan
-      '#F2F2F2', -- white
+      dracula.bright_black,   -- black
+      dracula.bright_red,     -- red
+      dracula.bright_green,   -- green
+      dracula.bright_yellow,  -- yellow
+      dracula.bright_blue,    -- blue
+      dracula.bright_purple,  -- magenta/purple
+      dracula.bright_cyan,    -- cyan
+      dracula.bright_white,   -- white
    },
    tab_bar = {
-      background = 'rgba(0, 0, 0, 0.4)',
+      background = '#0D0D0D',
       active_tab = {
-         bg_color = mocha.surface2,
-         fg_color = mocha.text,
+         bg_color = '#212121',
+         fg_color = '#F8F8F2',
       },
       inactive_tab = {
-         bg_color = mocha.surface0,
-         fg_color = mocha.subtext1,
+         bg_color = '#161616',
+         fg_color = '#545454',
       },
       inactive_tab_hover = {
-         bg_color = mocha.surface0,
-         fg_color = mocha.text,
+         bg_color = '#2A2A2A',
+         fg_color = '#BBBBBB',
       },
       new_tab = {
-         bg_color = mocha.base,
-         fg_color = mocha.text,
+         bg_color = '#0D0D0D',
+         fg_color = '#545454',
       },
       new_tab_hover = {
-         bg_color = mocha.mantle,
-         fg_color = mocha.text,
-         italic = true,
+         bg_color = '#2A2A2A',
+         fg_color = '#F8F8F2',
       },
    },
-   visual_bell = mocha.red,
-   indexed = {
-      [16] = mocha.peach,
-      [17] = mocha.rosewater,
-   },
-   scrollbar_thumb = mocha.surface2,
-   split = mocha.overlay0,
-   compose_cursor = mocha.flamingo,
+   visual_bell = dracula.red,
+   scrollbar_thumb = '#44475A',
+   split = '#545454',
+   compose_cursor = dracula.cyan,
 }
 
 return colorscheme

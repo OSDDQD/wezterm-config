@@ -1,3 +1,4 @@
+local wezterm = require('wezterm')
 local gpu_adapters = require('utils.gpu-adapter')
 local backdrops = require('utils.backdrops')
 local colors = require('colors.custom')
@@ -22,38 +23,45 @@ return {
    colors = colors,
 
    -- background: pass in `true` if you want wezterm to start with focus mode on (no bg images)
-   background = backdrops:initial_options(false),
+   background = backdrops:initial_options(true),
 
    -- scrollbar
    enable_scroll_bar = true,
+   min_scroll_bar_height = "3cell",
 
-   -- tab bar
+   -- tab bar (managed by bar.wezterm plugin)
    enable_tab_bar = true,
+   show_close_tab_button_in_tabs = false,
    hide_tab_bar_if_only_one_tab = false,
-   use_fancy_tab_bar = false,
-   tab_max_width = 25,
-   show_tab_index_in_tab_bar = false,
    switch_to_last_active_tab_when_closing_tab = true,
+   show_new_tab_button_in_tab_bar = true,
 
    -- command palette
-   command_palette_fg_color = '#b4befe',
-   command_palette_bg_color = '#11111b',
-   command_palette_font_size = 12,
+   command_palette_fg_color = '#F8F8F2',
+   command_palette_bg_color = '#212121',
+   command_palette_font_size = 13,
    command_palette_rows = 25,
 
    -- window
+   window_decorations = "RESIZE",
+   integrated_title_button_style = "Windows",
+   integrated_title_button_color = "auto",
+   integrated_title_button_alignment = "Right",
+   initial_cols = 140,
+   initial_rows = 40,
    window_padding = {
-      left = 0,
-      right = 0,
-      top = 10,
-      bottom = 7.5,
+    left = 5,
+    right = 10,
+    top = 12,
+    bottom = 7,
    },
    adjust_window_size_when_changing_font_size = false,
    window_close_confirmation = 'NeverPrompt',
    window_frame = {
-      active_titlebar_bg = '#090909',
-      -- font = fonts.font,
-      -- font_size = fonts.font_size,
+      active_titlebar_bg = '#0D0D0D',
+      inactive_titlebar_bg = '#0D0D0D',
+      font = wezterm.font({ family = 'JetBrainsMono Nerd Font' }),
+      font_size = 13,
    },
    -- inactive_pane_hsb = {
    --    saturation = 0.9,

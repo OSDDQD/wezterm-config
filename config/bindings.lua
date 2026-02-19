@@ -5,13 +5,8 @@ local act = wezterm.action
 
 local mod = {}
 
-if platform.is_mac then
-   mod.SUPER = 'SUPER'
-   mod.SUPER_REV = 'SUPER|CTRL'
-elseif platform.is_win or platform.is_linux then
-   mod.SUPER = 'ALT' -- to not conflict with Windows key shortcuts
-   mod.SUPER_REV = 'ALT|CTRL'
-end
+mod.SUPER = 'ALT' -- to not conflict with Windows key shortcuts
+mod.SUPER_REV = 'ALT|CTRL'
 
 -- stylua: ignore
 local keys = {
@@ -59,9 +54,30 @@ local keys = {
 
    -- tabs --
    -- tabs: spawn+close
-   { key = 't',          mods = mod.SUPER,     action = act.SpawnTab('DefaultDomain') },
-   { key = 't',          mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'wsl:ubuntu-fish' }) },
-   { key = 'w',          mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
+   { key = '1',          mods = 'CTRL|SHIFT', action = act.SpawnTab('DefaultDomain') },
+   { key = '2',          mods = 'CTRL|SHIFT', action = act.SpawnTab({ DomainName = 'WSL' }) },
+   { key = 'w',          mods = 'CTRL|SHIFT', action = act.CloseCurrentTab({ confirm = false }) },
+
+   -- tabs: duplicate current tab (same domain + working directory)
+   {
+      key = 'd',
+      mods = 'CTRL|SHIFT',
+      action = wezterm.action_callback(function(window, pane)
+         local cwd_uri = pane:get_current_working_dir()
+         local cwd = nil
+         if cwd_uri then
+            cwd = cwd_uri.file_path
+         end
+         local domain = pane:get_domain_name()
+         window:perform_action(
+            act.SpawnCommandInNewTab({
+               domain = { DomainName = domain },
+               cwd = cwd,
+            }),
+            pane
+         )
+      end),
+   },
 
    -- tabs: navigation
    { key = '[',          mods = mod.SUPER,     action = act.ActivateTabRelative(-1) },
@@ -193,8 +209,8 @@ local keys = {
    -- panes: scroll pane
    { key = 'u',        mods = mod.SUPER, action = act.ScrollByLine(-5) },
    { key = 'd',        mods = mod.SUPER, action = act.ScrollByLine(5) },
-   { key = 'PageUp',   mods = 'NONE',    action = act.ScrollByPage(-0.75) },
-   { key = 'PageDown', mods = 'NONE',    action = act.ScrollByPage(0.75) },
+   { key = 'PageUp',   mods = 'SHIFT',   action = act.ScrollByPage(-0.75) },
+   { key = 'PageDown', mods = 'SHIFT',   action = act.ScrollByPage(0.75) },
 
    -- key-tables --
    -- resizes fonts
@@ -250,6 +266,7 @@ local mouse_bindings = {
 return {
    disable_default_key_bindings = true,
    -- disable_default_mouse_bindings = true,
+   key_map_preference = 'Physical',
    leader = { key = 'Space', mods = mod.SUPER_REV },
    keys = keys,
    key_tables = key_tables,

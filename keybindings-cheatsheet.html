@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WezTerm Keybindings</title>
+<style>
+  :root {
+    --bg:        #1a1b26;
+    --bg2:       #16161e;
+    --bg3:       #24283b;
+    --border:    #414868;
+    --fg:        #c0caf5;
+    --fg-dim:    #565f89;
+    --accent1:   #7aa2f7;  /* blue  */
+    --accent2:   #9ece6a;  /* green */
+    --accent3:   #e0af68;  /* yellow*/
+    --accent4:   #bb9af7;  /* purple*/
+    --accent5:   #7dcfff;  /* cyan  */
+    --accent6:   #f7768e;  /* red   */
+    --key-bg:    #2a2d3e;
+    --key-fg:    #c0caf5;
+    --key-border:#414868;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 24px;
+    min-height: 100vh;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent1);
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--fg-dim);
+    margin-bottom: 20px;
+    font-size: 12px;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 20px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--fg-dim);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+
+  .section {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-header .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .s-misc    .section-header { background: rgba(122,162,247,0.15); color: var(--accent1); }
+  .s-misc    .dot            { background: var(--accent1); }
+  .s-cursor  .section-header { background: rgba(158,206,106,0.15); color: var(--accent2); }
+  .s-cursor  .dot            { background: var(--accent2); }
+  .s-copy    .section-header { background: rgba(224,175,104,0.15); color: var(--accent3); }
+  .s-copy    .dot            { background: var(--accent3); }
+  .s-tabs    .section-header { background: rgba(187,154,247,0.15); color: var(--accent4); }
+  .s-tabs    .dot            { background: var(--accent4); }
+  .s-window  .section-header { background: rgba(125,207,255,0.15); color: var(--accent5); }
+  .s-window  .dot            { background: var(--accent5); }
+  .s-bg      .section-header { background: rgba(247,118,142,0.15); color: var(--accent6); }
+  .s-bg      .dot            { background: var(--accent6); }
+  .s-panes   .section-header { background: rgba(122,162,247,0.15); color: var(--accent1); }
+  .s-panes   .dot            { background: var(--accent1); }
+  .s-scroll  .section-header { background: rgba(158,206,106,0.15); color: var(--accent2); }
+  .s-scroll  .dot            { background: var(--accent2); }
+  .s-leader  .section-header { background: rgba(224,175,104,0.15); color: var(--accent3); }
+  .s-leader  .dot            { background: var(--accent3); }
+  .s-mouse   .section-header { background: rgba(187,154,247,0.15); color: var(--accent4); }
+  .s-mouse   .dot            { background: var(--accent4); }
+
+  .binding {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 14px;
+    border-top: 1px solid rgba(65,72,104,0.4);
+    gap: 10px;
+  }
+
+  .binding:hover {
+    background: rgba(255,255,255,0.03);
+  }
+
+  .action {
+    color: var(--fg);
+    font-size: 12px;
+    flex: 1;
+  }
+
+  .keys {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  kbd {
+    display: inline-block;
+    background: var(--key-bg);
+    color: var(--key-fg);
+    border: 1px solid var(--key-border);
+    border-bottom: 2px solid var(--key-border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: inherit;
+    font-size: 11px;
+    white-space: nowrap;
+    line-height: 1.6;
+  }
+
+  .plus {
+    color: var(--fg-dim);
+    font-size: 10px;
+  }
+
+  .note {
+    color: var(--fg-dim);
+    font-size: 10px;
+    font-style: italic;
+    padding: 6px 14px 10px;
+    border-top: 1px solid rgba(65,72,104,0.3);
+  }
+
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    body { background: #fff; color: #000; }
+    .section { border: 1px solid #ccc; }
+    kbd { background: #eee; border-color: #aaa; color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<h1>WezTerm Keybindings</h1>
+<p class="subtitle">Personal config cheatsheet &nbsp;·&nbsp; SUPER = Alt &nbsp;·&nbsp; SUPER_REV = Alt+Ctrl &nbsp;·&nbsp; LEADER = Alt+Ctrl+Space</p>
+
+<div class="legend">
+  <div class="legend-item">
+    <kbd>SUPER</kbd>
+    <span>= <strong>Alt</strong></span>
+  </div>
+  <div class="legend-item">
+    <kbd>SUPER_REV</kbd>
+    <span>= <strong>Alt + Ctrl</strong></span>
+  </div>
+  <div class="legend-item">
+    <kbd>LEADER</kbd>
+    <span>= <strong>Alt + Ctrl + Space</strong> (then press key within 1s)</span>
+  </div>
+  <div class="legend-item">
+    <kbd>Ctrl+Click</kbd>
+    <span>= открыть ссылку</span>
+  </div>
+</div>
+
+<div class="grid">
+
+  <!-- MISC -->
+  <div class="section s-misc">
+    <div class="section-header"><span class="dot"></span>Разное / Интерфейс</div>
+
+    <div class="binding">
+      <span class="action">Режим копирования</span>
+      <span class="keys"><kbd>F1</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Палитра команд</span>
+      <span class="keys"><kbd>F2</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Лаунчер</span>
+      <span class="keys"><kbd>F3</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Лаунчер → Вкладки (Fuzzy)</span>
+      <span class="keys"><kbd>F4</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Лаунчер → Воркспейсы (Fuzzy)</span>
+      <span class="keys"><kbd>F5</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Полноэкранный режим</span>
+      <span class="keys"><kbd>F11</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Debug Overlay</span>
+      <span class="keys"><kbd>F12</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Поиск (нечувствит. к регистру)</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>F</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Открыть URL под курсором (QuickSelect)</span>
+      <span class="keys"><kbd>Alt+Ctrl</kbd><span class="plus">+</span><kbd>U</kbd></span>
+    </div>
+  </div>
+
+  <!-- CURSOR -->
+  <div class="section s-cursor">
+    <div class="section-header"><span class="dot"></span>Курсор</div>
+
+    <div class="binding">
+      <span class="action">Переход в начало строки</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>←</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Переход в конец строки</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>→</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Удалить всё до начала строки</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>Backspace</kbd></span>
+    </div>
+  </div>
+
+  <!-- COPY/PASTE -->
+  <div class="section s-copy">
+    <div class="section-header"><span class="dot"></span>Копирование / Вставка</div>
+
+    <div class="binding">
+      <span class="action">Копировать в буфер обмена</span>
+      <span class="keys"><kbd>Ctrl+Shift</kbd><span class="plus">+</span><kbd>C</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Вставить из буфера обмена</span>
+      <span class="keys"><kbd>Ctrl+Shift</kbd><span class="plus">+</span><kbd>V</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Открыть ссылку под мышью</span>
+      <span class="keys"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Click</kbd></span>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="section s-tabs">
+    <div class="section-header"><span class="dot"></span>Вкладки</div>
+
+    <div class="binding">
+      <span class="action">Новая вкладка (Default Domain)</span>
+      <span class="keys"><kbd>Ctrl+Shift</kbd><span class="plus">+</span><kbd>1</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Новая вкладка (WSL)</span>
+      <span class="keys"><kbd>Ctrl+Shift</kbd><span class="plus">+</span><kbd>2</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Дублировать вкладку (тот же домен + cwd)</span>
+      <span class="keys"><kbd>Ctrl+Shift</kbd><span class="plus">+</span><kbd>D</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Закрыть вкладку</span>
+      <span class="keys"><kbd>Ctrl+Shift</kbd><span class="plus">+</span><kbd>W</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Следующая вкладка</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>]</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Предыдущая вкладка</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>[</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Переместить вкладку вправо</span>
+      <span class="keys"><kbd>Alt+Ctrl</kbd><span class="plus">+</span><kbd>]</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Переместить вкладку влево</span>
+      <span class="keys"><kbd>Alt+Ctrl</kbd><span class="plus">+</span><kbd>[</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Переименовать вкладку (вручную)</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>0</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Сбросить имя вкладки</span>
+      <span class="keys"><kbd>Alt+Ctrl</kbd><span class="plus">+</span><kbd>0</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Скрыть / показать Tab Bar</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>9</kbd></span>
+    </div>
+  </div>
+
+  <!-- WINDOW -->
+  <div class="section s-window">
+    <div class="section-header"><span class="dot"></span>Окно</div>
+
+    <div class="binding">
+      <span class="action">Новое окно</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>N</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Развернуть окно (maximize)</span>
+      <span class="keys"><kbd>Alt+Ctrl</kbd><span class="plus">+</span><kbd>Enter</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Уменьшить окно (-50px)</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>-</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Увеличить окно (+50px)</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>=</kbd></span>
+    </div>
+  </div>
+
+  <!-- BACKGROUND -->
+  <div class="section s-bg">
+    <div class="section-header"><span class="dot"></span>Фон (Backdrop)</div>
+
+    <div class="binding">
+      <span class="action">Случайный фон</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>/</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Выбрать фон (Fuzzy-список)</span>
+      <span class="keys"><kbd>Alt+Ctrl</kbd><span class="plus">+</span><kbd>/</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Предыдущий фон</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>,</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Следующий фон</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>.</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Переключить фокус фона</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>B</kbd></span>
+    </div>
+  </div>
+
+  <!-- PANES -->
+  <div class="section s-panes">
+    <div class="section-header"><span class="dot"></span>Панели (Panes)</div>
+
+    <div class="binding">
+      <span class="action">Разделить панель вертикально</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>\</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Разделить панель горизонтально</span>
+      <span class="keys"><kbd>Alt+Ctrl</kbd><span class="plus">+</span><kbd>\</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Zoom панели (развернуть/свернуть)</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>Enter</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Закрыть панель</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>W</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Перейти в панель ↑</span>
+      <span class="keys"><kbd>Alt+Ctrl</kbd><span class="plus">+</span><kbd>K</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Перейти в панель ↓</span>
+      <span class="keys"><kbd>Alt+Ctrl</kbd><span class="plus">+</span><kbd>J</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Перейти в панель ←</span>
+      <span class="keys"><kbd>Alt+Ctrl</kbd><span class="plus">+</span><kbd>H</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Перейти в панель →</span>
+      <span class="keys"><kbd>Alt+Ctrl</kbd><span class="plus">+</span><kbd>L</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Выбрать и поменять панель местами</span>
+      <span class="keys"><kbd>Alt+Ctrl</kbd><span class="plus">+</span><kbd>P</kbd></span>
+    </div>
+  </div>
+
+  <!-- SCROLL -->
+  <div class="section s-scroll">
+    <div class="section-header"><span class="dot"></span>Прокрутка</div>
+
+    <div class="binding">
+      <span class="action">Прокрутить вверх (5 строк)</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>U</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Прокрутить вниз (5 строк)</span>
+      <span class="keys"><kbd>Alt</kbd><span class="plus">+</span><kbd>D</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Прокрутить вверх (¾ страницы)</span>
+      <span class="keys"><kbd>Shift</kbd><span class="plus">+</span><kbd>PageUp</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Прокрутить вниз (¾ страницы)</span>
+      <span class="keys"><kbd>Shift</kbd><span class="plus">+</span><kbd>PageDown</kbd></span>
+    </div>
+  </div>
+
+  <!-- LEADER TABLES -->
+  <div class="section s-leader">
+    <div class="section-header"><span class="dot"></span>Leader-режимы &nbsp;<span style="font-weight:400;opacity:.6">(Alt+Ctrl+Space → key)</span></div>
+
+    <div class="binding">
+      <span class="action" style="color:var(--accent3);font-weight:600">LEADER + F &nbsp;→ resize_font</span>
+      <span class="keys"></span>
+    </div>
+    <div class="binding">
+      <span class="action">Увеличить шрифт</span>
+      <span class="keys"><kbd>K</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Уменьшить шрифт</span>
+      <span class="keys"><kbd>J</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Сбросить размер шрифта</span>
+      <span class="keys"><kbd>R</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Выйти из режима</span>
+      <span class="keys"><kbd>Esc</kbd> / <kbd>Q</kbd></span>
+    </div>
+
+    <div class="binding" style="margin-top:4px">
+      <span class="action" style="color:var(--accent3);font-weight:600">LEADER + P &nbsp;→ resize_pane</span>
+      <span class="keys"></span>
+    </div>
+    <div class="binding">
+      <span class="action">Увеличить панель ↑</span>
+      <span class="keys"><kbd>K</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Уменьшить панель ↓</span>
+      <span class="keys"><kbd>J</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Уменьшить панель ←</span>
+      <span class="keys"><kbd>H</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Увеличить панель →</span>
+      <span class="keys"><kbd>L</kbd></span>
+    </div>
+    <div class="binding">
+      <span class="action">Выйти из режима</span>
+      <span class="keys"><kbd>Esc</kbd> / <kbd>Q</kbd></span>
+    </div>
+    <div class="note">Режим активен 1 секунду после последнего нажатия</div>
+  </div>
+
+</div>
+
+</body>
+</html>

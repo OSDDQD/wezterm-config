@@ -1,4 +1,4 @@
-local platform = require('utils.platform')
+local wezterm = require('wezterm')
 
 local options = {
    -- ref: https://wezfurlong.org/wezterm/config/lua/SshDomain.html
@@ -8,36 +8,27 @@ local options = {
    unix_domains = {},
 
    -- ref: https://wezfurlong.org/wezterm/config/lua/WslDomain.html
-   wsl_domains = {},
+   wsl_domains = {
+      {
+         name = 'WSL',
+         distribution = 'Ubuntu',
+         username = 'os',
+         default_cwd = '/home/os',
+         default_prog = { 'fish', '-l' },
+      }
+   },
 }
 
-if platform.is_win then
-   options.ssh_domains = {
-      {
-         name = 'ssh:wsl',
-         remote_address = 'localhost',
+-- add SSH domains from ~/.ssh/config
+for host, _ in pairs(wezterm.enumerate_ssh_hosts()) do
+   if host ~= '*' then
+      table.insert(options.ssh_domains, {
+         name = host,
+         remote_address = host,
          multiplexing = 'None',
-         default_prog = { 'fish', '-l' },
          assume_shell = 'Posix',
-      },
-   }
-
-   options.wsl_domains = {
-      {
-         name = 'wsl:ubuntu-fish',
-         distribution = 'Ubuntu',
-         username = 'kevin',
-         default_cwd = '/home/kevin',
-         default_prog = { 'fish', '-l' },
-      },
-      {
-         name = 'wsl:ubuntu-bash',
-         distribution = 'Ubuntu',
-         username = 'kevin',
-         default_cwd = '/home/kevin',
-         default_prog = { 'bash', '-l' },
-      },
-   }
+      })
+   end
 end
 
 return options
