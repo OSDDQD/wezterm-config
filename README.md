@@ -7,6 +7,9 @@
   <a href="https://github.com/OSDDQD/wezterm-config/issues">
     <img alt="Issues" src="https://img.shields.io/github/issues/OSDDQD/wezterm-config?style=for-the-badge&logo=gitbook&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41">
   </a>
+  <a href="https://osddqd.github.io/wezterm-config/keybindings-cheatsheet.html">
+    <img alt="Keybindings" src="https://img.shields.io/badge/keybindings-cheatsheet-E0AF68?style=for-the-badge&logo=keyboard&logoColor=D9E0EE&labelColor=302D41">
+  </a>
 </p>
 
 <p align="center">
@@ -76,7 +79,7 @@ git clone https://github.com/OSDDQD/wezterm-config.git ~/.config/wezterm
 
 `SUPER` = <kbd>Alt</kbd> &nbsp;·&nbsp; `SUPER_REV` = <kbd>Alt</kbd>+<kbd>Ctrl</kbd> &nbsp;·&nbsp; `LEADER` = <kbd>Alt</kbd>+<kbd>Ctrl</kbd>+<kbd>Space</kbd>
 
-> Full interactive reference: **[keybindings-cheatsheet.html](./keybindings-cheatsheet.html)**
+> Full interactive reference: **[keybindings-cheatsheet](https://osddqd.github.io/wezterm-config/keybindings-cheatsheet.html)**
 
 #### Miscellaneous
 
