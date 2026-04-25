@@ -1,5 +1,4 @@
 local wezterm = require('wezterm')
-local colors = require('colors.custom').colors
 local nf = wezterm.nerdfonts
 
 -- Map foreground process name to a Nerd Font icon
@@ -45,13 +44,11 @@ wezterm.on('format-tab-title', function(tab)
    if tab.is_active then
       return wezterm.format({
          { Attribute = { Intensity = 'Half' } },
-         -- { Foreground = { Color = colors.blue } },
          { Text = ' ' .. icon .. ' ' .. dir .. ' ' },
       })
    else
       return wezterm.format({
          { Attribute = { Intensity = 'Half' } },
-         -- { Foreground = { Color = colors.overlay1 } },
          { Text = ' ' .. icon .. ' ' .. dir .. ' ' },
       })
    end

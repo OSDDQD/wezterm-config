@@ -1,16 +1,8 @@
-local gpu_adapters = require('utils.gpu-adapter')
 local backdrops = require('utils.backdrops')
-local colors = require('colors.custom').colorscheme
-local wezterm = require('wezterm')
+local Theme = require('colors.custom')
 
 return {
-   max_fps = 120,
-   front_end = 'WebGpu', ---@type 'WebGpu' | 'OpenGL' | 'Software'
-   webgpu_power_preference = 'HighPerformance',
-   webgpu_preferred_adapter = gpu_adapters:pick_best(),
-
    -- cursor
-   animation_fps = 120,
    cursor_blink_ease_in = 'EaseOut',
    cursor_blink_ease_out = 'EaseOut',
    cursor_thickness = '0.1cell',
@@ -18,7 +10,7 @@ return {
    cursor_blink_rate = 650,
 
    -- color scheme
-   colors = colors,
+   colors = Theme.colorscheme,
 
    -- background: pass in `true` if you want wezterm to start with focus mode on (no bg images)
    background = backdrops:initial_options(true),
@@ -27,8 +19,8 @@ return {
    enable_scroll_bar = true,
 
    -- command palette
-   command_palette_fg_color = '#b4befe',
-   command_palette_bg_color = '#11111b',
+   command_palette_fg_color = Theme.colors.command_palette_fg,
+   command_palette_bg_color = Theme.colors.command_palette_bg,
    command_palette_font_size = 13,
    command_palette_rows = 10,
 
@@ -45,8 +37,8 @@ return {
    window_close_confirmation = 'NeverPrompt',
    window_frame = {
       font_size = 12,
-      inactive_titlebar_bg = '#000',
-      active_titlebar_bg = '#000',
+      inactive_titlebar_bg = Theme.colors.base,
+      active_titlebar_bg = Theme.colors.base,
    },
    inactive_pane_hsb = {
       saturation = 0.1,

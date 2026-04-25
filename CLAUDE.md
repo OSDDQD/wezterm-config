@@ -6,7 +6,7 @@ Personal WezTerm config. Lua only. Targets Windows WezTerm running with a WSL:Ub
 
 ## Code style
 
-- **3-space indentation** (not 2 or 4) — enforced by `.stylua.toml`. Some legacy files still use 4 spaces; run `stylua .` to normalize when convenient.
+- **3-space indentation** (not 2 or 4) — enforced by `.stylua.toml`. Run `stylua --check .` to verify; `stylua .` to fix.
 - Single quotes for strings, `snake_case` for names.
 - EmmyLua annotations (`---@class`, `---@return`) where types help.
 - Never reformat blocks marked `-- stylua: ignore` — manual alignment in keytables and color palettes is intentional.
@@ -25,9 +25,13 @@ local config = Config:init()
 
 Each `config/<name>.lua` returns a flat data table keyed by WezTerm option names. To add new options, create a new module (or edit an existing one) and chain it with `:append(require('config.<name>'))` in `wezterm.lua` — do not inline options in `wezterm.lua`. `Config:append()` warns on duplicate keys.
 
+Third-party plugins are wired in `config/plugins.lua` (which exports `apply(config)`) and applied to the built config table at the end of `wezterm.lua`. Add new plugins inside `M.apply`, not in the entry point.
+
+Color literals belong in `colors/custom.lua` (`Theme.colors`) — the colorscheme and other modules reference them by name. Don't inline new hex values in `config/*.lua`; add a named entry to the palette and reference it.
+
 ## Reserved keybindings
 
-Don't bind `Alt+Ctrl+D`, `Alt+Ctrl+V`, or `Alt+Ctrl+H` — the `quick_domains.wezterm` plugin (loaded in `wezterm.lua`) claims them for domain attach / vsplit / hsplit.
+Don't bind `Alt+Ctrl+D`, `Alt+Ctrl+V`, or `Alt+Ctrl+H` — the `quick_domains.wezterm` plugin (loaded via `config/plugins.lua`) claims them for domain attach / vsplit / hsplit.
 
 ## Verifying changes
 

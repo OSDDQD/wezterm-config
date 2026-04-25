@@ -30,6 +30,8 @@ Theme.colors = {
    base = '#000000',
    mantle = '#1A1A1A',
    crust = '#121212',
+   command_palette_fg = '#b4befe',
+   command_palette_bg = '#11111b',
 }
 
 local colorscheme = {
@@ -68,7 +70,6 @@ local colorscheme = {
       Theme.colors.text,
    },
    tab_bar = {
-      -- background = Theme.colors.crust,
       active_tab = {
          bg_color = '#000000',
          fg_color = Theme.colors.blue,

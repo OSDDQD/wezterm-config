@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WezTerm — справочник хоткеев</title>
+<style>
+   :root {
+      --bg: #11111b;
+      --bg-alt: #1a1a26;
+      --text: #f8f8f2;
+      --muted: #9a9a9a;
+      --border: #3b3b3b;
+      --accent: #82aaff;
+      --accent2: #c792ea;
+      --accent3: #ff79c6;
+      --kbd-bg: #21222c;
+      --kbd-border: #545454;
+      --kbd-shadow: rgba(0, 0, 0, 0.6);
+   }
+   * { box-sizing: border-box; }
+   html { scroll-behavior: smooth; }
+   body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+   }
+   .wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+   }
+   header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 1rem;
+   }
+   h1 {
+      margin: 0 0 .5rem;
+      font-size: 2.25rem;
+      color: var(--accent);
+      letter-spacing: -.02em;
+   }
+   header p {
+      margin: 0;
+      color: var(--muted);
+   }
+   h2 {
+      font-size: 1.35rem;
+      color: var(--accent2);
+      margin: 2.5rem 0 .75rem;
+      padding-bottom: .35rem;
+      border-bottom: 1px solid var(--border);
+   }
+   h2 .anchor {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: normal;
+      margin-left: .35rem;
+      opacity: 0;
+      transition: opacity .15s;
+   }
+   h2:hover .anchor { opacity: 1; }
+   .toc {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0 0;
+   }
+   .toc-title {
+      font-weight: 600;
+      color: var(--muted);
+      font-size: .82rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: .5rem;
+   }
+   .toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: .25rem .75rem;
+   }
+   .toc a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: .92rem;
+   }
+   .toc a:hover { color: var(--accent); }
+   table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: .5rem 0 0;
+   }
+   th, td {
+      text-align: left;
+      padding: .55rem .75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+   }
+   th {
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--muted);
+      font-weight: 500;
+   }
+   tr:last-child td { border-bottom: 0; }
+   tbody tr:hover { background: rgba(130, 170, 255, 0.05); }
+   td.combo { white-space: nowrap; min-width: 13rem; }
+   td.note { color: var(--muted); font-size: .9rem; }
+   kbd {
+      display: inline-block;
+      background: var(--kbd-bg);
+      color: var(--text);
+      border: 1px solid var(--kbd-border);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      padding: .12em .5em;
+      font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, Consolas, monospace;
+      font-size: .85em;
+      line-height: 1.1;
+      box-shadow: 0 1px 0 var(--kbd-shadow);
+      white-space: nowrap;
+   }
+   .plus {
+      color: var(--muted);
+      margin: 0 .15em;
+      font-size: .85em;
+   }
+   .pill {
+      display: inline-block;
+      background: rgba(199, 146, 234, 0.15);
+      color: var(--accent2);
+      border: 1px solid rgba(199, 146, 234, 0.35);
+      border-radius: 999px;
+      padding: .12em .6em;
+      font-size: .78em;
+      font-weight: 500;
+      letter-spacing: .02em;
+   }
+   .callout {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent3);
+      border-radius: 4px;
+      padding: .8rem 1rem;
+      margin: 1rem 0;
+      font-size: .92rem;
+   }
+   .callout strong { color: var(--accent3); }
+   code {
+      font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, Consolas, monospace;
+      font-size: .88em;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 5px;
+   }
+   footer {
+      margin-top: 4rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .85rem;
+   }
+   footer a { color: var(--accent); }
+   @media (max-width: 600px) {
+      .wrap { padding: 2rem 1rem 3rem; }
+      h1 { font-size: 1.7rem; }
+      th, td { padding: .5rem; }
+      td.combo { min-width: 0; white-space: normal; }
+   }
+</style>
+</head>
+<body>
+<div class="wrap">
+   <header>
+      <h1>WezTerm — справочник хоткеев</h1>
+      <p>Персональная конфигурация (Windows + WSL Ubuntu). Источник истины: <code>config/bindings.lua</code>.</p>
+      <div class="toc">
+         <div class="toc-title">Разделы</div>
+         <ul>
+            <li><a href="#globals">Глобальное</a></li>
+            <li><a href="#misc">Окно &amp; поиск</a></li>
+            <li><a href="#cursor">Курсор</a></li>
+            <li><a href="#clipboard">Буфер обмена</a></li>
+            <li><a href="#tabs">Вкладки</a></li>
+            <li><a href="#panes-split">Пейны: split</a></li>
+            <li><a href="#panes-focus">Пейны: фокус</a></li>
+            <li><a href="#panes-resize">Пейны: resize</a></li>
+            <li><a href="#panes-misc">Пейны: ротация / закрытие</a></li>
+            <li><a href="#scroll">Прокрутка</a></li>
+            <li><a href="#mouse">Мышь</a></li>
+            <li><a href="#domains">Домены (плагин)</a></li>
+         </ul>
+      </div>
+   </header>
+
+   <section id="globals">
+      <h2>Глобальное <a class="anchor" href="#globals">#</a></h2>
+      <table>
+         <tbody>
+            <tr>
+               <td class="combo"><span class="pill">Leader</span></td>
+               <td><kbd>Alt</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Space</kbd></td>
+            </tr>
+            <tr>
+               <td class="combo">Дефолтные бинды</td>
+               <td class="note">отключены (<code>disable_default_key_bindings = true</code>) — здесь полный список.</td>
+            </tr>
+            <tr>
+               <td class="combo">Layout</td>
+               <td class="note"><code>key_map_preference = 'Physical'</code> — бинды привязаны к физическим клавишам, не к раскладке.</td>
+            </tr>
+         </tbody>
+      </table>
+   </section>
+
+   <section id="misc">
+      <h2>Окно, лаунчер, поиск <a class="anchor" href="#misc">#</a></h2>
+      <table>
+         <thead><tr><th>Шорткат</th><th>Действие</th></tr></thead>
+         <tbody>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>F1</kbd></td><td>Activate Copy Mode</td></tr>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>F2</kbd></td><td>Show Launcher</td></tr>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>F3</kbd></td><td>Launcher → Tabs (fuzzy)</td></tr>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>F4</kbd></td><td>Launcher → Workspaces (fuzzy)</td></tr>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>F5</kbd></td><td>Show Debug Overlay</td></tr>
+            <tr><td class="combo"><kbd>F11</kbd></td><td>Toggle Full Screen</td></tr>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>P</kbd></td><td>Command Palette</td></tr>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>F</kbd></td><td>Поиск (case-insensitive)</td></tr>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>N</kbd></td><td>Spawn Window</td></tr>
+         </tbody>
+      </table>
+   </section>
+
+   <section id="cursor">
+      <h2>Курсор / shell-эмуляция <a class="anchor" href="#cursor">#</a></h2>
+      <table>
+         <thead><tr><th>Шорткат</th><th>Шлёт shell&#39;у</th></tr></thead>
+         <tbody>
+            <tr><td class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>←</kbd></td><td><kbd>Home</kbd> — в начало строки</td></tr>
+            <tr><td class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>→</kbd></td><td><kbd>End</kbd> — в конец строки</td></tr>
+            <tr><td class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Backspace</kbd></td><td><kbd>Ctrl</kbd><span class="plus">+</span><kbd>U</kbd> — стереть до начала строки</td></tr>
+            <tr><td class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Enter</kbd></td><td>literal newline (<code>\n</code>) — для multi-line ввода</td></tr>
+         </tbody>
+      </table>
+   </section>
+
+   <section id="clipboard">
+      <h2>Буфер обмена <a class="anchor" href="#clipboard">#</a></h2>
+      <table>
+         <thead><tr><th>Шорткат</th><th>Действие</th></tr></thead>
+         <tbody>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>C</kbd></td><td>Скопировать выделение в Clipboard</td></tr>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>V</kbd></td><td>Вставить из Clipboard</td></tr>
+         </tbody>
+      </table>
+   </section>
+
+   <section id="tabs">
+      <h2>Вкладки <a class="anchor" href="#tabs">#</a></h2>
+      <table>
+         <thead><tr><th>Шорткат</th><th>Действие</th></tr></thead>
+         <tbody>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>T</kbd></td><td>Новая вкладка (DefaultDomain)</td></tr>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>W</kbd></td><td>Закрыть текущую вкладку (без подтверждения)</td></tr>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>D</kbd></td><td>Дублировать вкладку (тот же домен и cwd)</td></tr>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Tab</kbd></td><td>Следующая вкладка</td></tr>
+         </tbody>
+      </table>
+   </section>
+
+   <section id="panes-split">
+      <h2>Пейны — создать split <a class="anchor" href="#panes-split">#</a></h2>
+      <table>
+         <thead><tr><th>Шорткат</th><th>Действие</th></tr></thead>
+         <tbody>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>\</kbd></td><td>Split → новый пейн справа (<code>SplitHorizontal</code>)</td></tr>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>-</kbd></td><td>Split → новый пейн снизу (<code>SplitVertical</code>)</td></tr>
+         </tbody>
+      </table>
+      <div class="callout">
+         <strong>Терминология WezTerm.</strong> <code>SplitHorizontal</code> кладёт пейн <em>справа</em> (вертикальная линия раздела), <code>SplitVertical</code> — <em>снизу</em> (горизонтальная линия). Символы <code>\</code> и <code>-</code> повторяют направление разделителя.
+      </div>
+   </section>
+
+   <section id="panes-focus">
+      <h2>Пейны — фокус <a class="anchor" href="#panes-focus">#</a></h2>
+      <table>
+         <thead><tr><th>Шорткат</th><th>Действие</th></tr></thead>
+         <tbody>
+            <tr><td class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>←</kbd></td><td>Фокус на пейн слева</td></tr>
+            <tr><td class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>↓</kbd></td><td>Фокус на пейн снизу</td></tr>
+            <tr><td class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>↑</kbd></td><td>Фокус на пейн сверху</td></tr>
+            <tr><td class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>→</kbd></td><td>Фокус на пейн справа</td></tr>
+         </tbody>
+      </table>
+   </section>
+
+   <section id="panes-resize">
+      <h2>Пейны — resize-mode <a class="anchor" href="#panes-resize">#</a></h2>
+      <table>
+         <thead><tr><th>Шорткат</th><th>Действие</th></tr></thead>
+         <tbody>
+            <tr><td class="combo"><span class="pill">Leader</span><span class="plus">+</span><kbd>R</kbd></td><td>Войти в resize-mode (тайм-аут 2 сек)</td></tr>
+            <tr><td class="combo"><kbd>←</kbd> <kbd>↓</kbd> <kbd>↑</kbd> <kbd>→</kbd></td><td>Изменить размер пейна (шаг 5 ячеек)</td></tr>
+            <tr><td class="combo"><kbd>Esc</kbd> / <kbd>Enter</kbd> / <kbd>Q</kbd></td><td>Выйти из resize-mode</td></tr>
+         </tbody>
+      </table>
+   </section>
+
+   <section id="panes-misc">
+      <h2>Пейны — ротация и закрытие <a class="anchor" href="#panes-misc">#</a></h2>
+      <table>
+         <thead><tr><th>Шорткат</th><th>Действие</th></tr></thead>
+         <tbody>
+            <tr><td class="combo"><span class="pill">Leader</span><span class="plus">+</span><kbd>O</kbd></td><td>Ротация пейнов по часовой</td></tr>
+            <tr><td class="combo"><span class="pill">Leader</span><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>O</kbd></td><td>Ротация против часовой</td></tr>
+            <tr><td class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>X</kbd></td><td>Закрыть текущий пейн (без подтверждения)</td></tr>
+         </tbody>
+      </table>
+      <div class="callout">
+         <strong>Сменить ориентацию существующего split&#39;а нельзя</strong> — ограничение WezTerm. Пейн нужно закрыть и пересоздать в нужном направлении.
+      </div>
+   </section>
+
+   <section id="scroll">
+      <h2>Прокрутка <a class="anchor" href="#scroll">#</a></h2>
+      <table>
+         <thead><tr><th>Шорткат</th><th>Действие</th></tr></thead>
+         <tbody>
+            <tr><td class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>PgUp</kbd></td><td>На 5 строк вверх</td></tr>
+            <tr><td class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>PgDn</kbd></td><td>На 5 строк вниз</td></tr>
+            <tr><td class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>PgUp</kbd></td><td>На 0.85 экрана вверх</td></tr>
+            <tr><td class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>PgDn</kbd></td><td>На 0.85 экрана вниз</td></tr>
+         </tbody>
+      </table>
+   </section>
+
+   <section id="mouse">
+      <h2>Мышь <a class="anchor" href="#mouse">#</a></h2>
+      <table>
+         <thead><tr><th>Действие</th><th>Эффект</th></tr></thead>
+         <tbody>
+            <tr><td class="combo"><kbd>Ctrl</kbd> + клик ЛКМ по ссылке</td><td>Открыть URL под курсором (file:// — открыть в micro)</td></tr>
+         </tbody>
+      </table>
+   </section>
+
+   <section id="domains">
+      <h2>Домены — плагин quick_domains <a class="anchor" href="#domains">#</a></h2>
+      <table>
+         <thead><tr><th>Шорткат</th><th>Действие</th></tr></thead>
+         <tbody>
+            <tr><td class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>D</kbd></td><td>Attach к домену (выбор из списка)</td></tr>
+            <tr><td class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>V</kbd></td><td>Vsplit с выбором домена</td></tr>
+            <tr><td class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>H</kbd></td><td>Hsplit с выбором домена</td></tr>
+         </tbody>
+      </table>
+      <div class="callout">
+         Эти три бинда зарезервированы плагином <code>DavidRR-F/quick_domains.wezterm</code> (см. <code>config/plugins.lua</code>) — не переопределяй их в <code>config/bindings.lua</code>.
+      </div>
+   </section>
+
+   <footer>
+      <p>Обновляйте этот документ вручную при изменении биндов в <code>config/bindings.lua</code>.</p>
+   </footer>
+</div>
+</body>
+</html>

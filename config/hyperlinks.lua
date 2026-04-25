@@ -113,4 +113,7 @@ wezterm.on('open-uri', function(window, pane, uri)
    end
 end)
 
-return {}
+-- Start with the built-in hyperlinking (URLs, emails, etc.)
+return {
+   hyperlink_rules = wezterm.default_hyperlink_rules(),
+}
