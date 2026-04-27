@@ -2,8 +2,8 @@ local wezterm = require('wezterm')
 local act = wezterm.action
 
 local mod = {
-   SUPER = 'ALT',
-   SUPER_REV = 'ALT|CTRL',
+    SUPER = 'ALT',
+    SUPER_REV = 'ALT|CTRL',
 }
 
 -- stylua: ignore
@@ -58,38 +58,38 @@ local keys = {
     },
 
     -- tabs: navigation
-    { key = 'Tab',      mods = 'CTRL',        action = act.ActivateTabRelative(1) },
+    { key = 'Tab',        mods = 'CTRL',         action = act.ActivateTabRelative(1) },
 
 
     -- window --
     -- window: spawn windows
-    { key = 'n',        mods = 'SHIFT|CTRL',  action = act.SpawnWindow },
+    { key = 'n',          mods = 'SHIFT|CTRL',   action = act.SpawnWindow },
 
     -- panes: scroll pane
-    { key = 'PageUp',     mods = mod.SUPER,     action = act.ScrollByLine(-5) },
-    { key = 'PageDown',   mods = mod.SUPER,     action = act.ScrollByLine(5) },
-    { key = 'PageUp',     mods = mod.SUPER_REV, action = act.ScrollByPage(-0.85) },
-    { key = 'PageDown',   mods = mod.SUPER_REV, action = act.ScrollByPage(0.85) },
+    { key = 'PageUp',     mods = mod.SUPER,      action = act.ScrollByLine(-5) },
+    { key = 'PageDown',   mods = mod.SUPER,      action = act.ScrollByLine(5) },
+    { key = 'PageUp',     mods = mod.SUPER_REV,  action = act.ScrollByPage(-0.85) },
+    { key = 'PageDown',   mods = mod.SUPER_REV,  action = act.ScrollByPage(0.85) },
 
     -- panes: split current pane (`\`/`-` echo the divider direction)
-    { key = '\\',         mods = 'CTRL|SHIFT',  action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
-    { key = '-',          mods = 'CTRL|SHIFT',  action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
+    { key = '\\',         mods = 'CTRL|SHIFT',   action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
+    { key = '-',          mods = 'CTRL|SHIFT',   action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
 
     -- panes: focus navigation
-    { key = 'LeftArrow',  mods = 'SHIFT|ALT',   action = act.ActivatePaneDirection('Left') },
-    { key = 'DownArrow',  mods = 'SHIFT|ALT',   action = act.ActivatePaneDirection('Down') },
-    { key = 'UpArrow',    mods = 'SHIFT|ALT',   action = act.ActivatePaneDirection('Up') },
-    { key = 'RightArrow', mods = 'SHIFT|ALT',   action = act.ActivatePaneDirection('Right') },
+    { key = 'LeftArrow',  mods = 'SHIFT|ALT',    action = act.ActivatePaneDirection('Left') },
+    { key = 'DownArrow',  mods = 'SHIFT|ALT',    action = act.ActivatePaneDirection('Down') },
+    { key = 'UpArrow',    mods = 'SHIFT|ALT',    action = act.ActivatePaneDirection('Up') },
+    { key = 'RightArrow', mods = 'SHIFT|ALT',    action = act.ActivatePaneDirection('Right') },
 
     -- panes: rotate pane positions (Leader+o / Leader+O)
-    { key = 'o',          mods = 'LEADER',      action = act.RotatePanes('Clockwise') },
-    { key = 'O',          mods = 'LEADER|SHIFT',action = act.RotatePanes('CounterClockwise') },
+    { key = 'o',          mods = 'LEADER',       action = act.RotatePanes('Clockwise') },
+    { key = 'O',          mods = 'LEADER|SHIFT', action = act.RotatePanes('CounterClockwise') },
 
     -- panes: close current pane
-    { key = 'x',          mods = 'CTRL|SHIFT',  action = act.CloseCurrentPane({ confirm = false }) },
+    { key = 'x',          mods = 'CTRL|SHIFT',   action = act.CloseCurrentPane({ confirm = false }) },
 
     -- panes: enter resize mode (arrows to resize; Esc/Enter/q to exit)
-    { key = 'r',          mods = 'LEADER',      action = act.ActivateKeyTable({ name = 'resize_pane', one_shot = false, timeout_milliseconds = 2000 }) },
+    { key = 'r',          mods = 'LEADER',       action = act.ActivateKeyTable({ name = 'resize_pane', one_shot = false, timeout_milliseconds = 2000 }) },
 }
 
 -- stylua: ignore
@@ -106,23 +106,23 @@ local key_tables = {
 }
 
 local mouse_bindings = {
-   -- Ctrl-click will open the link under the mouse cursor
-   {
-      event = { Up = { streak = 1, button = 'Left' } },
-      mods = 'CTRL',
-      action = act.OpenLinkAtMouseCursor,
-   },
+    -- Ctrl-click will open the link under the mouse cursor
+    {
+        event = { Up = { streak = 1, button = 'Left' } },
+        mods = 'CTRL',
+        action = act.OpenLinkAtMouseCursor,
+    },
 }
 
 return {
-   disable_default_key_bindings = true,
-   -- disable_default_mouse_bindings = true,
-   key_map_preference = 'Physical',
-   leader = { key = 'Space', mods = mod.SUPER_REV },
-   keys = keys,
-   key_tables = key_tables,
-   mouse_bindings = mouse_bindings,
-   allow_win32_input_mode = false,
-   enable_kitty_keyboard = false,
-   ui_key_cap_rendering = 'WindowsSymbols',
+    disable_default_key_bindings = true,
+    -- disable_default_mouse_bindings = true,
+    key_map_preference = 'Physical',
+    leader = { key = 'Space', mods = mod.SUPER_REV },
+    keys = keys,
+    key_tables = key_tables,
+    mouse_bindings = mouse_bindings,
+    allow_win32_input_mode = true,
+    enable_kitty_keyboard = false,
+    ui_key_cap_rendering = 'WindowsSymbols',
 }

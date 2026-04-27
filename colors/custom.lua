@@ -34,7 +34,7 @@ Theme.colors = {
 }
 
 local colorscheme = {
-    split = Theme.colors.blue,
+    split = Theme.colors.subtext1,
     foreground = Theme.colors.text,
     background = Theme.colors.base,
     cursor_bg = '#ECEFF4',
@@ -46,7 +46,7 @@ local colorscheme = {
         [16] = Theme.colors.peach,
         [17] = Theme.colors.rosewater,
     },
-    scrollbar_thumb = Theme.colors.blue,
+    scrollbar_thumb = Theme.colors.overlay0,
     compose_cursor = Theme.colors.flamingo,
     ansi = {
         Theme.colors.surface0,

@@ -1,6 +1,7 @@
 local wezterm = require('wezterm')
 local nf = wezterm.nerdfonts
 local agent_deck = require('config.agent_deck')
+local Theme = require('colors.custom')
 
 -- When true, render our own tab title with process icon (and agent status icon
 -- when an OSC 1337 user var is set by Claude Code hooks running inside WSL).
@@ -22,6 +23,39 @@ local process_icons = {
     ['nvim'] = nf.custom_vim,
     ['git'] = nf.dev_git,
 }
+
+-- 1/8-th circle slices for ConEmu-style progress (OSC 9;4) percentage rendering.
+-- stylua: ignore
+local PCT_GLYPHS = {
+    nf.md_circle_slice_1, nf.md_circle_slice_2, nf.md_circle_slice_3, nf.md_circle_slice_4,
+    nf.md_circle_slice_5, nf.md_circle_slice_6, nf.md_circle_slice_7, nf.md_circle_slice_8,
+}
+
+local function pct_glyph(pct)
+    local slot = math.max(0, math.min(7, math.floor((pct or 0) / 12)))
+    return PCT_GLYPHS[slot + 1]
+end
+
+--- Map pane:get_progress() value to an icon and color, or nil when there is no progress.
+---@param progress any value of tab.active_pane.progress (nightly WezTerm only)
+---@return table|nil { icon = string, color = string }
+local function format_progress(progress)
+    if not progress or progress == 'None' then
+        return nil
+    end
+    if progress == 'Indeterminate' then
+        return { icon = nf.md_dots_horizontal, color = Theme.colors.peach }
+    end
+    if type(progress) == 'table' then
+        if progress.Percentage ~= nil then
+            return { icon = pct_glyph(progress.Percentage), color = Theme.colors.green }
+        end
+        if progress.Error ~= nil then
+            return { icon = pct_glyph(progress.Error), color = Theme.colors.red }
+        end
+    end
+    return nil
+end
 
 local function get_process_icon(proc)
     local name = proc:gsub('(.*[/\\])(.*)', '%2'):gsub('%.exe$', '')
@@ -45,16 +79,30 @@ end
 if USE_CUSTOM_TAB_TITLE then
     wezterm.on('format-tab-title', function(tab)
         local dir = get_dir_name(tab.active_pane.title)
+        local progress = format_progress(tab.active_pane.progress)
         local status = agent_deck.pick_tab_status(tab)
         local intensity = tab.is_active and 'Bold' or 'Half'
+        local tab_fg = tab.is_active and Theme.colorscheme.tab_bar.active_tab.fg_color
+            or Theme.colorscheme.tab_bar.inactive_tab.fg_color
 
-        if status then
+        -- Progress beats agent status for the icon slot — it's an active task signal.
+        local accent = progress
+        if not accent and status then
             local s = agent_deck.STATUS[status]
+            local color = s.color
+            if s.blink and not agent_deck.is_blink_visible() then
+                color = tab.is_active and Theme.colorscheme.tab_bar.active_tab.bg_color
+                    or Theme.colorscheme.tab_bar.inactive_tab.bg_color
+            end
+            accent = { icon = s.icon, color = color }
+        end
+
+        if accent then
             return wezterm.format({
                 { Text = ' ' },
-                { Foreground = { Color = s.color } },
-                { Text = s.icon },
-                { Foreground = { Color = 'default' } },
+                { Foreground = { Color = accent.color } },
+                { Text = accent.icon },
+                { Foreground = { Color = tab_fg } },
                 { Attribute = { Intensity = intensity } },
                 { Text = ' ' .. dir .. ' ' },
             })

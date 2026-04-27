@@ -30,7 +30,7 @@ return {
     initial_rows = 60,
     window_padding = {
         left = '0.2cell',
-        right = '0.6cell',
+        right = '0.4cell',
         top = '0.1cell',
         bottom = '0.1cell',
     },
@@ -55,5 +55,9 @@ return {
         target = 'CursorColor',
     },
     warn_about_missing_glyphs = false,
-    enable_checksum_rectangular_area = true,
+    enable_checksum_rectangular_area = false,
+
+    -- Drives blink animation in tab title (config/agent_deck.lua) — every tick
+    -- triggers a window repaint via the registered `update-status` handler.
+    status_update_interval = 500,
 }
