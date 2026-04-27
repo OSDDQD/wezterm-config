@@ -122,7 +122,7 @@ return {
    keys = keys,
    key_tables = key_tables,
    mouse_bindings = mouse_bindings,
-   allow_win32_input_mode = true,
+   allow_win32_input_mode = false,
    enable_kitty_keyboard = false,
    ui_key_cap_rendering = 'WindowsSymbols',
 }
