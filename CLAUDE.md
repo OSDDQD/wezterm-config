@@ -6,7 +6,7 @@ Personal WezTerm config. Lua only. Targets Windows WezTerm running with a WSL:Ub
 
 ## Code style
 
-- **3-space indentation** (not 2 or 4) — enforced by `.stylua.toml`. Run `stylua --check .` to verify; `stylua .` to fix.
+- **4-space indentation** — enforced by `.stylua.toml`. Run `stylua --check .` to verify; `stylua .` to fix.
 - Single quotes for strings, `snake_case` for names.
 - EmmyLua annotations (`---@class`, `---@return`) where types help.
 - Never reformat blocks marked `-- stylua: ignore` — manual alignment in keytables and color palettes is intentional.
@@ -17,10 +17,10 @@ Personal WezTerm config. Lua only. Targets Windows WezTerm running with a WSL:Ub
 
 ```lua
 local config = Config:init()
-   :append(require('config.appearance'))
-   :append(require('config.bindings'))
-   -- ...
-   .options
+    :append(require('config.appearance'))
+    :append(require('config.bindings'))
+    -- ...
+    .options
 ```
 
 Each `config/<name>.lua` returns a flat data table keyed by WezTerm option names. To add new options, create a new module (or edit an existing one) and chain it with `:append(require('config.<name>'))` in `wezterm.lua` — do not inline options in `wezterm.lua`. `Config:append()` warns on duplicate keys.
