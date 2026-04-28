@@ -56,8 +56,4 @@ return {
     },
     warn_about_missing_glyphs = false,
     enable_checksum_rectangular_area = false,
-
-    -- Drives blink animation in tab title (config/agent_deck.lua) — every tick
-    -- triggers a window repaint via the registered `update-status` handler.
-    status_update_interval = 500,
 }
