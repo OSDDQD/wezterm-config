@@ -1,6 +1,23 @@
 local wezterm = require('wezterm')
+local nf = wezterm.nerdfonts
+local Theme = require('colors.custom')
 
 ---@alias DomainKind 'ssh' | 'wsl' | 'local' | 'unix'
+
+---@class DomainKindMeta
+---@field priority integer    -- меньше = выше в меню
+---@field icon string         -- Nerd Font glyph
+---@field color string        -- цвет заголовка группы и иконки
+---@field label string        -- надпись в заголовке группы
+
+---@type table<DomainKind, DomainKindMeta>
+-- stylua: ignore
+local kinds = {
+    ssh       = { priority = 10, icon = nf.cod_remote,             color = Theme.colors.blue,   label = 'SSH'   },
+    wsl       = { priority = 20, icon = nf.cod_terminal_ubuntu,    color = Theme.colors.yellow, label = 'WSL'   },
+    ['local'] = { priority = 30, icon = nf.cod_terminal,           color = Theme.colors.green,  label = 'LOCAL' },
+    unix      = { priority = 40, icon = nf.cod_server_environment, color = Theme.colors.mauve,  label = 'UNIX'  },
+}
 
 ---@class DomainEntry
 ---@field kind DomainKind
@@ -62,6 +79,7 @@ end
 
 -- expose the filtered list to the launcher without putting it on the config table
 wezterm.GLOBAL.domain_entries = filtered
+wezterm.GLOBAL.domain_kinds = kinds
 
 -- project filtered entries into wezterm-native option tables
 local ssh_domains, wsl_domains, unix_domains, launch_menu = {}, {}, {}, {}
