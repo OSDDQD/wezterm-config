@@ -6,9 +6,9 @@ return {
     -- cursor
     cursor_blink_ease_in = 'EaseOut',
     cursor_blink_ease_out = 'EaseOut',
-    cursor_thickness = '0.2cell',
+    cursor_thickness = '0.1cell',
     default_cursor_style = 'BlinkingBar',
-    cursor_blink_rate = 650,
+    cursor_blink_rate = 600,
 
     -- color scheme
     colors = Theme.colorscheme,
@@ -20,27 +20,28 @@ return {
     enable_scroll_bar = true,
 
     -- command palette
-    command_palette_fg_color = Theme.colors.command_palette_fg,
-    command_palette_bg_color = Theme.colors.command_palette_bg,
-    command_palette_font_size = 13,
+    -- command_palette_fg_color = Theme.colors.command_palette_fg,
+    -- command_palette_bg_color = Theme.colors.command_palette_bg,
+    command_palette_font_size = 14,
     command_palette_rows = 10,
 
-    window_decorations = 'RESIZE',
-    initial_cols = 160,
-    initial_rows = 60,
+    window_decorations = "RESIZE",
+
+    initial_cols = 100,
+    initial_rows = 20,
     window_padding = {
-        left = '0.2cell',
-        right = '0.4cell',
-        top = '0.1cell',
-        bottom = '0.1cell',
+        left = '1pt',
+        right = '1pt',
+        top = '0',
+        bottom = '0',
     },
     adjust_window_size_when_changing_font_size = false,
     window_close_confirmation = 'NeverPrompt',
     window_frame = {
         font = wezterm.font_with_fallback({ 'Segoe UI', 'Symbols Nerd Font Mono' }),
-        font_size = 12,
-        inactive_titlebar_bg = Theme.colors.base,
-        active_titlebar_bg = Theme.colors.base,
+        font_size = 13,
+        inactive_titlebar_bg = Theme.colors.surface0,
+        active_titlebar_bg = Theme.colors.surface0,
     },
     inactive_pane_hsb = {
         saturation = 0.1,
@@ -55,5 +56,4 @@ return {
         target = 'CursorColor',
     },
     warn_about_missing_glyphs = false,
-    enable_checksum_rectangular_area = false,
 }

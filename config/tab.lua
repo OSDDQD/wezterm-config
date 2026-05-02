@@ -105,10 +105,10 @@ end
 
 return {
     enable_tab_bar = true,
-    tab_bar_at_bottom = true,
+    tab_bar_at_bottom = false,
     use_fancy_tab_bar = true,
     show_new_tab_button_in_tab_bar = false,
-    tab_max_width = 25,
+    tab_max_width = 30,
     hide_tab_bar_if_only_one_tab = false,
     show_tab_index_in_tab_bar = false,
     switch_to_last_active_tab_when_closing_tab = true,

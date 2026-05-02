@@ -70,11 +70,11 @@ local colorscheme = {
     },
     tab_bar = {
         active_tab = {
-            bg_color = '#000000',
+            bg_color = Theme.colors.base,
             fg_color = Theme.colors.blue,
             underline = 'Single',
             italic = false,
-            strikethrough = false,
+            strikethrough = true,
         },
         inactive_tab = {
             bg_color = Theme.colors.surface0,
@@ -92,7 +92,7 @@ local colorscheme = {
             bg_color = Theme.colors.surface0,
             fg_color = Theme.colors.subtext1,
         },
-        inactive_tab_edge = '#000',
+        inactive_tab_edge = Theme.colors.base,
     },
 }
 

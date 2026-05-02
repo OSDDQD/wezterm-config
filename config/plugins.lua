@@ -1,23 +1,9 @@
-local wezterm = require('wezterm')
-local Theme = require('colors.custom')
-
 local M = {}
 
+---Wire up third-party WezTerm plugins. Add new plugins inside this function.
+---@param config table the built WezTerm config table
 function M.apply(config)
-    local smart_ssh = wezterm.plugin.require('https://github.com/DavidRR-F/smart_ssh.wezterm')
-    smart_ssh.apply_to_config(config, {
-        multiplexing = 'None',
-        assume_shell = 'Posix',
-    })
-
-    config.keys = config.keys or {}
-    for _, k in ipairs({
-        { key = 'd', mods = 'ALT|CTRL', action = smart_ssh.tab() },
-        { key = 'h', mods = 'ALT|CTRL', action = smart_ssh.hsplit() },
-        { key = 'v', mods = 'ALT|CTRL', action = smart_ssh.vsplit() },
-    }) do
-        table.insert(config.keys, k)
-    end
+    -- no third-party plugins currently in use
 end
 
 return M

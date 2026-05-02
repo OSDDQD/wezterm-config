@@ -1,5 +1,6 @@
 local wezterm = require('wezterm')
 local act = wezterm.action
+local domain_launcher = require('utils.domain_launcher')
 
 local mod = {
     SUPER = 'ALT',
@@ -10,10 +11,9 @@ local mod = {
 local keys = {
     -- misc/useful --
     { key = 'F1',         mods = 'CTRL|SHIFT',  action = 'ActivateCopyMode' },
-    { key = 'F2',         mods = 'CTRL|SHIFT',  action = act.ShowLauncher },
-    { key = 'F3',         mods = 'CTRL|SHIFT',  action = act.ShowLauncherArgs({ flags = 'FUZZY|TABS' }) },
-    { key = 'F4',         mods = 'CTRL|SHIFT',  action = act.ShowLauncherArgs({ flags = 'FUZZY|WORKSPACES' }) },
-    { key = 'F5',         mods = 'CTRL|SHIFT',  action = act.ShowDebugOverlay },
+    { key = 'F3',         mods = 'CTRL|SHIFT',  action = domain_launcher.action },
+    { key = 'F5',         mods = mod.SUPER_REV,  action = act.ReloadConfiguration },
+    { key = 'F6',         mods = mod.SUPER_REV,  action = act.ShowDebugOverlay },
     { key = 'F11',        mods = 'NONE',        action = act.ToggleFullScreen },
 
     { key = 'p',          mods = 'CTRL|SHIFT',  action = act.ActivateCommandPalette },
@@ -23,6 +23,9 @@ local keys = {
     { key = 'LeftArrow',  mods = mod.SUPER_REV, action = act.SendKey({ key = 'Home' }) },
     { key = 'RightArrow', mods = mod.SUPER_REV, action = act.SendKey({ key = 'End' }) },
     { key = 'Backspace',  mods = mod.SUPER_REV, action = act.SendKey({ key = 'u', mods = 'CTRL' }) },
+
+    { key = 'U',          mods = 'CTRL|SHIFT',  action = act.CharSelect },
+    { key = 'Space',  mods = mod.SUPER_REV, action = act.QuickSelect  },
 
     -- copy/paste --
     { key = 'c',          mods = 'CTRL|SHIFT',  action = act.CopyTo('Clipboard') },
@@ -59,7 +62,7 @@ local keys = {
 
     -- tabs: navigation
     { key = 'Tab',        mods = 'CTRL',         action = act.ActivateTabRelative(1) },
-
+    { key = 'Tab',        mods = 'SHIFT|CTRL',         action = act.ActivateTabRelative(-1) },
 
     -- window --
     -- window: spawn windows
@@ -68,8 +71,8 @@ local keys = {
     -- panes: scroll pane
     { key = 'PageUp',     mods = mod.SUPER,      action = act.ScrollByLine(-5) },
     { key = 'PageDown',   mods = mod.SUPER,      action = act.ScrollByLine(5) },
-    { key = 'PageUp',     mods = mod.SUPER_REV,  action = act.ScrollByPage(-0.85) },
-    { key = 'PageDown',   mods = mod.SUPER_REV,  action = act.ScrollByPage(0.85) },
+    { key = 'PageUp',     mods = mod.SUPER_REV,  action = act.ScrollByPage(-0.5) },
+    { key = 'PageDown',   mods = mod.SUPER_REV,  action = act.ScrollByPage(0.5) },
 
     -- panes: split current pane (`\`/`-` echo the divider direction)
     { key = '\\',         mods = 'CTRL|SHIFT',   action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
@@ -124,5 +127,5 @@ return {
     mouse_bindings = mouse_bindings,
     allow_win32_input_mode = true,
     enable_kitty_keyboard = false,
-    ui_key_cap_rendering = 'WindowsSymbols',
+    treat_left_ctrlalt_as_altgr = false,
 }
