@@ -12,7 +12,7 @@ local keys = {
     -- misc/useful --
     { key = 'F1',         mods = 'CTRL|SHIFT',  action = 'ActivateCopyMode' },
     { key = 'F3',         mods = 'CTRL|SHIFT',  action = domain_launcher.action },
-    { key = 'F5',         mods = mod.SUPER_REV,  action = act.ReloadConfiguration },
+    { key = 'R',         mods = mod.SUPER_REV,  action = act.ReloadConfiguration },
     { key = 'F6',         mods = mod.SUPER_REV,  action = act.ShowDebugOverlay },
     { key = 'F11',        mods = 'NONE',        action = act.ToggleFullScreen },
 
