@@ -108,7 +108,7 @@ local function mode_choice(id, icon, icon_color, text)
         id = id,
         label = wezterm.format({
             { Foreground = { Color = icon_color } },
-            { Text = icon .. '  ' },
+            { Text = ' ' .. icon .. '  ' },
             { Foreground = { Color = Theme.colors.text } },
             { Text = text },
         }),
