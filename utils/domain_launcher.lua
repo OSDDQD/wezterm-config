@@ -88,11 +88,9 @@ local function build_choices(entries, kinds)
             id = '__sep_' .. kind,
             label = wezterm.format({
                 { Foreground = { Color = Theme.colors.overlay1 } },
-                { Text = '── ' },
                 { Foreground = { Color = meta_kind.color } },
                 { Text = meta_kind.icon .. '  ' .. meta_kind.label },
                 { Foreground = { Color = Theme.colors.overlay1 } },
-                { Text = ' ──────────────────────' },
             }),
         })
 
