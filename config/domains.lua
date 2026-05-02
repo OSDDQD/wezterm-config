@@ -32,7 +32,7 @@ local kinds = {
 ---@type DomainEntry[]
 local entries = {
     -- stylua: ignore start
-    { kind = 'wsl',   name = 'WSL:Ubuntu', distribution = 'Ubuntu', username = 'osddqd', default_cwd = '/home/osddqd' },
+    { kind = 'wsl',   name = 'WSL:Ubuntu', distribution = 'Ubuntu', username = 'osddqd', default_cwd = '/home/osddqd', default = true },
     { kind = 'local', name = 'Command Prompt',        args = { 'cmd.exe' } },
     { kind = 'local', name = 'PowerShell',       args = { 'pwsh.exe', '-NoLogo' } },
     { kind = 'local', name = 'PowerShell v1', args = { 'powershell.exe' } },
@@ -77,6 +77,22 @@ for _, e in ipairs(entries) do
     end
 end
 
+local default_entry = nil
+for _, e in ipairs(filtered) do
+    if e.default then
+        if default_entry then
+            wezterm.log_error(
+                ('multiple default domains; keeping %s, ignoring %s'):format(
+                    default_entry.name,
+                    e.name
+                )
+            )
+        else
+            default_entry = e
+        end
+    end
+end
+
 -- expose the filtered list to the launcher without putting it on the config table
 wezterm.GLOBAL.domain_entries = filtered
 wezterm.GLOBAL.domain_kinds = kinds
@@ -117,9 +133,19 @@ for _, e in ipairs(filtered) do
     end
 end
 
-return {
+local result = {
     ssh_domains = ssh_domains,
     wsl_domains = wsl_domains,
     unix_domains = unix_domains,
     launch_menu = launch_menu,
 }
+
+if default_entry then
+    if default_entry.kind == 'local' then
+        result.default_prog = default_entry.args
+    else
+        result.default_domain = default_entry.name
+    end
+end
+
+return result
