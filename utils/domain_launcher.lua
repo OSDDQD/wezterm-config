@@ -128,7 +128,7 @@ M.action = wezterm.action_callback(function(window, pane)
             title = title,
             fuzzy = true,
             choices = {
-                mode_choice('tab', nf.cod_add, Theme.colors.blue, 'New Tab'),
+                mode_choice('tab', nf.md_plus_box_outline, Theme.colors.blue, 'New Tab'),
                 mode_choice(
                     'hsplit',
                     nf.cod_split_horizontal,
