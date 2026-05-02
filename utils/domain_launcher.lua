@@ -1,5 +1,7 @@
 local wezterm = require('wezterm')
 local act = wezterm.action
+local nf = wezterm.nerdfonts
+local Theme = require('colors.custom')
 
 local M = {}
 
@@ -101,17 +103,39 @@ local function pick_target(window, pane, mode)
     )
 end
 
+local function mode_choice(id, icon, icon_color, text)
+    return {
+        id = id,
+        label = wezterm.format({
+            { Foreground = { Color = icon_color } },
+            { Text = icon .. '  ' },
+            { Foreground = { Color = Theme.colors.text } },
+            { Text = text },
+        }),
+    }
+end
+
 ---Two-step launcher action: pick spawn mode, then pick a domain entry.
 ---Bind it from config.bindings like any other action.
 M.action = wezterm.action_callback(function(window, pane)
+    local title = wezterm.format({
+        { Foreground = { Color = Theme.colors.blue } },
+        { Text = nf.cod_terminal_powershell .. '  Spawn mode' },
+    })
+
     window:perform_action(
         act.InputSelector({
-            title = 'Spawn mode',
+            title = title,
             fuzzy = true,
             choices = {
-                { id = 'tab', label = 'New Tab' },
-                { id = 'hsplit', label = 'Horizontal Split' },
-                { id = 'vsplit', label = 'Vertical Split' },
+                mode_choice('tab', nf.cod_add, Theme.colors.blue, 'New Tab'),
+                mode_choice(
+                    'hsplit',
+                    nf.cod_split_horizontal,
+                    Theme.colors.peach,
+                    'Horizontal Split'
+                ),
+                mode_choice('vsplit', nf.cod_split_vertical, Theme.colors.mauve, 'Vertical Split'),
             },
             action = wezterm.action_callback(function(inner_window, inner_pane, id, _label)
                 if not id then
