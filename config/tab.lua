@@ -66,6 +66,22 @@ local function get_process_icon(proc)
     return nf.cod_terminal
 end
 
+---@param domain_name string|nil
+---@return string|nil icon, string|nil color
+local function get_domain_icon(domain_name)
+    if not domain_name or domain_name == '' then
+        return nil
+    end
+    local entries = wezterm.GLOBAL.domain_entries or {}
+    local kinds = wezterm.GLOBAL.domain_kinds or {}
+    for _, e in ipairs(entries) do
+        if e.name == domain_name and e.kind ~= 'local' and kinds[e.kind] then
+            return kinds[e.kind].icon, kinds[e.kind].color
+        end
+    end
+    return nil
+end
+
 local function get_dir_name(pane_title)
     if pane_title == '' then
         return '~'
@@ -89,6 +105,18 @@ if USE_CUSTOM_TAB_TITLE then
                 { Text = ' ' },
                 { Foreground = { Color = accent.color } },
                 { Text = accent.icon },
+                { Foreground = { Color = tab_fg } },
+                { Attribute = { Intensity = intensity } },
+                { Text = ' ' .. dir .. ' ' },
+            })
+        end
+
+        local domain_icon, domain_color = get_domain_icon(tab.active_pane.domain_name)
+        if domain_icon then
+            return wezterm.format({
+                { Text = ' ' },
+                { Foreground = { Color = tab.is_active and domain_color or tab_fg } },
+                { Text = domain_icon },
                 { Foreground = { Color = tab_fg } },
                 { Attribute = { Intensity = intensity } },
                 { Text = ' ' .. dir .. ' ' },
