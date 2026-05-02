@@ -25,7 +25,7 @@ return {
     command_palette_font_size = 14,
     command_palette_rows = 10,
 
-    window_decorations = "RESIZE",
+    window_decorations = 'RESIZE',
 
     initial_cols = 100,
     initial_rows = 20,
