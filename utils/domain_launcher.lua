@@ -21,6 +21,30 @@ local function spawn_action(mode, entry)
     end
 end
 
+local function entry_meta(entry)
+    if entry.kind == 'ssh' then
+        local user = entry.username or ''
+        local host = entry.remote_address or entry.name
+        if user ~= '' then
+            return user .. '@' .. host
+        end
+        return host
+    elseif entry.kind == 'wsl' then
+        local user = entry.username or ''
+        local cwd = entry.default_cwd or ''
+        if user ~= '' and cwd ~= '' then
+            return user .. ' · ' .. cwd
+        end
+        return user ~= '' and user or cwd
+    elseif entry.kind == 'local' then
+        local arg = (entry.args and entry.args[1]) or ''
+        return arg:gsub('(.*[/\\])(.*)', '%2'):gsub('%.exe$', '')
+    elseif entry.kind == 'unix' then
+        return entry.socket_path or ''
+    end
+    return ''
+end
+
 local function build_choices(entries, kinds)
     -- группировка
     local groups = {}
@@ -59,22 +83,49 @@ local function build_choices(entries, kinds)
     for _, kind in ipairs(kind_order) do
         local group = groups[kind]
         sort_group(group)
-        local meta = kinds[kind]
+        local meta_kind = kinds[kind]
         table.insert(choices, {
             id = '__sep_' .. kind,
             label = wezterm.format({
                 { Foreground = { Color = Theme.colors.overlay1 } },
                 { Text = '── ' },
-                { Foreground = { Color = meta.color } },
-                { Text = meta.icon .. '  ' .. meta.label },
+                { Foreground = { Color = meta_kind.color } },
+                { Text = meta_kind.icon .. '  ' .. meta_kind.label },
                 { Foreground = { Color = Theme.colors.overlay1 } },
                 { Text = ' ──────────────────────' },
             }),
         })
+
+        -- pre-compute max widths внутри группы
+        local max_name = 0
+        local metas = {}
         for _, e in ipairs(group) do
+            if #e.name > max_name then
+                max_name = #e.name
+            end
+            metas[e] = entry_meta(e)
+        end
+
+        for _, e in ipairs(group) do
+            local meta = metas[e]
+            local pad_after_name = string.rep(' ', max_name - #e.name + 3)
+            local spans = {
+                { Foreground = { Color = meta_kind.color } },
+                { Text = '  ' .. meta_kind.icon .. '  ' },
+                { Foreground = { Color = Theme.colors.text } },
+                { Text = e.name },
+                { Text = pad_after_name },
+                { Foreground = { Color = Theme.colors.overlay1 } },
+                { Text = meta },
+            }
+            if e.default then
+                table.insert(spans, { Text = '   ' })
+                table.insert(spans, { Foreground = { Color = Theme.colors.peach } })
+                table.insert(spans, { Text = '★' })
+            end
             table.insert(choices, {
                 id = kind .. ':' .. e.name,
-                label = e.name,
+                label = wezterm.format(spans),
             })
         end
     end
