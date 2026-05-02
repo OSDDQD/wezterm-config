@@ -3,14 +3,6 @@ local act = wezterm.action
 
 local M = {}
 
-local kind_order = { 'ssh', 'wsl', 'local', 'unix' }
-local kind_label = {
-    ssh = 'SSH',
-    wsl = 'WSL',
-    ['local'] = 'LOCAL',
-    unix = 'UNIX',
-}
-
 local function spawn_action(mode, entry)
     local spawn
     if entry.kind == 'local' then
@@ -27,27 +19,54 @@ local function spawn_action(mode, entry)
     end
 end
 
-local function build_choices(entries)
+local function build_choices(entries, kinds)
+    -- группировка
     local groups = {}
     for _, e in ipairs(entries) do
         groups[e.kind] = groups[e.kind] or {}
         table.insert(groups[e.kind], e)
     end
 
+    -- упорядочиваем kind по priority (отбрасываем kind, у которых нет metadata)
+    local kind_order = {}
+    for kind, _ in pairs(groups) do
+        if kinds[kind] then
+            table.insert(kind_order, kind)
+        else
+            wezterm.log_error('domain_launcher: unknown kind ' .. tostring(kind))
+        end
+    end
+    table.sort(kind_order, function(a, b)
+        return kinds[a].priority < kinds[b].priority
+    end)
+
+    -- внутри группы: default первый, остальные по name:lower()
+    local function sort_group(group)
+        table.sort(group, function(a, b)
+            if a.default and not b.default then
+                return true
+            end
+            if b.default and not a.default then
+                return false
+            end
+            return a.name:lower() < b.name:lower()
+        end)
+    end
+
     local choices = {}
     for _, kind in ipairs(kind_order) do
         local group = groups[kind]
-        if group and #group > 0 then
+        sort_group(group)
+        local meta = kinds[kind]
+        table.insert(choices, {
+            id = '__sep_' .. kind,
+            label = '── ' .. meta.label .. ' ──',
+        })
+        for _, e in ipairs(group) do
             table.insert(choices, {
-                id = '__sep_' .. kind,
-                label = '── ' .. kind_label[kind] .. ' ──',
+                id = kind .. ':' .. e.name,
+                label = e.name,
             })
-            for _, e in ipairs(group) do
-                table.insert(choices, {
-                    id = kind .. ':' .. e.name,
-                    label = e.name,
-                })
-            end
         end
     end
     return choices
@@ -55,7 +74,8 @@ end
 
 local function pick_target(window, pane, mode)
     local entries = wezterm.GLOBAL.domain_entries or {}
-    local choices = build_choices(entries)
+    local kinds = wezterm.GLOBAL.domain_kinds or {}
+    local choices = build_choices(entries, kinds)
     window:perform_action(
         act.InputSelector({
             title = 'Domain (' .. mode .. ')',
