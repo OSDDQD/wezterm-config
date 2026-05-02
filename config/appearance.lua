@@ -17,7 +17,7 @@ return {
     -- background = backdrops:initial_options(true),
 
     -- scrollbar
-    enable_scroll_bar = true,
+    enable_scroll_bar = false,
 
     -- command palette
     -- command_palette_fg_color = Theme.colors.command_palette_fg,
