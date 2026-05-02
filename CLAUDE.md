@@ -29,6 +29,21 @@ Third-party plugins are wired in `config/plugins.lua` (which exports `apply(conf
 
 Color literals belong in `colors/custom.lua` (`Theme.colors`) — the colorscheme and other modules reference them by name. Don't inline new hex values in `config/*.lua`; add a named entry to the palette and reference it.
 
+## Domain taxonomy
+
+`config/domains.lua` is the single source of truth for everything spawnable. Two tables:
+
+- `entries` — concrete spawnable items (`{ kind, name, ...kind-specific fields }`). One entry may carry `default = true`; that entry becomes WezTerm's default (`default_domain` for ssh/wsl/unix, `default_prog` for local).
+- `kinds` — metadata per `kind`: `priority` (group order in launcher; smaller = higher), `icon` (Nerd Font glyph used in launcher and tab bar), `color` (palette ref for the group separator and the domain icon in tabs), `label` (group heading text).
+
+Both are exposed as `wezterm.GLOBAL.domain_entries` / `wezterm.GLOBAL.domain_kinds`. The launcher (`utils/domain_launcher.lua`) and the tab title resolver (`config/tab.lua`) read these globals — no other modules depend on them.
+
+Adding a new kind: register it in `kinds`, then make sure the projection block at the end of `config/domains.lua` knows how to map filtered entries of that kind into the appropriate native option (e.g., a new `unix` entry projects into `unix_domains`).
+
+Adding a new entry: append to `entries`. Sort order in the launcher is automatic (group by `kind.priority`, alphabetical inside, default first).
+
+Marking a different default: set `default = true` on exactly one entry; remove from the previous one.
+
 ## Reserved keybindings
 
 Don't bind `Alt+Ctrl+D`, `Alt+Ctrl+V`, or `Alt+Ctrl+H` — the `quick_domains.wezterm` plugin (loaded via `config/plugins.lua`) claims them for domain attach / vsplit / hsplit.
