@@ -62,7 +62,14 @@ local function build_choices(entries, kinds)
         local meta = kinds[kind]
         table.insert(choices, {
             id = '__sep_' .. kind,
-            label = '── ' .. meta.label .. ' ──',
+            label = wezterm.format({
+                { Foreground = { Color = Theme.colors.overlay1 } },
+                { Text = '── ' },
+                { Foreground = { Color = meta.color } },
+                { Text = meta.icon .. '  ' .. meta.label },
+                { Foreground = { Color = Theme.colors.overlay1 } },
+                { Text = ' ──────────────────────' },
+            }),
         })
         for _, e in ipairs(group) do
             table.insert(choices, {
@@ -80,7 +87,10 @@ local function pick_target(window, pane, mode)
     local choices = build_choices(entries, kinds)
     window:perform_action(
         act.InputSelector({
-            title = 'Domain (' .. mode .. ')',
+            title = wezterm.format({
+                { Foreground = { Color = Theme.colors.blue } },
+                { Text = ' ' .. nf.cod_terminal .. '  Domain (' .. mode .. ')' },
+            }),
             fuzzy = true,
             choices = choices,
             action = wezterm.action_callback(function(inner_window, inner_pane, id, _label)
