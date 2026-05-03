@@ -1,4 +1,11 @@
 local wezterm = require('wezterm')
+
+-- Active color theme. Either a `name` from a theme in colors/themes/ (e.g. 'Dracula+'),
+-- or any built-in WezTerm scheme name (https://wezterm.org/colorschemes/).
+-- Must be set BEFORE the first `require('colors')` in any module — appearance.lua
+-- is placed first in the wezterm.lua append chain to guarantee that.
+wezterm.GLOBAL.color_theme = 'Dracula+'
+
 local colors = require('colors')
 
 return {

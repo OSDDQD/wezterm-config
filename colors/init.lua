@@ -5,9 +5,10 @@ local THEMES = {
     require('colors.themes.example_builtin'),
 }
 
--- Active theme. Either a `name` from one of the THEMES entries (e.g. 'Dracula+'),
--- or any built-in WezTerm scheme name not declared in THEMES (e.g. 'Tokyo Night').
-local ACTIVE = 'Dracula+'
+-- Active theme name. Set by config/appearance.lua via wezterm.GLOBAL.color_theme
+-- before this module is first required. Falls back to 'Dracula+' if unset so the
+-- config still loads with a sensible default if someone reorders modules.
+local ACTIVE = wezterm.GLOBAL.color_theme or 'Dracula+'
 
 local function nilsafe(t, ...)
     for _, k in ipairs({ ... }) do
