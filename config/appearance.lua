@@ -1,5 +1,5 @@
 local wezterm = require('wezterm')
-local Theme = require('colors.custom')
+local colors = require('colors')
 
 return {
     -- cursor
@@ -10,17 +10,14 @@ return {
     cursor_blink_rate = 600,
 
     -- color scheme
-    colors = Theme.colorscheme,
-
-    -- background: pass in `true` if you want wezterm to start with focus mode on (no bg images)
-    -- background = backdrops:initial_options(true),
+    color_scheme = colors.color_scheme,
+    color_schemes = colors.color_schemes,
 
     -- scrollbar
     enable_scroll_bar = true,
 
     -- command palette
-    -- command_palette_fg_color = Theme.colors.command_palette_fg,
-    command_palette_bg_color = Theme.colors.command_palette_bg,
+    command_palette_bg_color = colors.accents.command_palette_bg,
     command_palette_font_size = 14,
     command_palette_rows = 10,
 
@@ -39,8 +36,8 @@ return {
     window_frame = {
         font = wezterm.font_with_fallback({ 'Segoe UI', 'Symbols Nerd Font Mono' }),
         font_size = 12,
-        inactive_titlebar_bg = Theme.colors.surface0,
-        active_titlebar_bg = Theme.colors.surface0,
+        inactive_titlebar_bg = colors.accents.titlebar_bg,
+        active_titlebar_bg = colors.accents.titlebar_bg,
     },
     inactive_pane_hsb = {
         saturation = 0.1,
