@@ -108,6 +108,7 @@ Exports:
 - `color_scheme :: string` — the `ACTIVE` value (after validation), suitable for WezTerm's `color_scheme` option.
 - `color_schemes :: table<string, scheme>` — every custom theme's `scheme` keyed by its `name`. Always registered, even non-active ones, so swapping `ACTIVE` doesn't require any other change.
 - `accents :: { [accent_key]: string }` — the active theme's accents, with missing keys filled by fallback.
+- `ansi :: { [1..8]: string, black, red, green, yellow, blue, magenta, cyan, white }` — the active scheme's 8 ANSI colors, accessible both by index (`ansi[5]`) and by standard name (`ansi.blue`). Sourced from `theme.scheme.ansi` (type A) or `wezterm.color.get_builtin_schemes()[name].ansi` (type B / direct built-in).
 
 ### Accent fallback
 
@@ -137,6 +138,7 @@ Single import everywhere: `local colors = require('colors')`.
 | `config/appearance.lua` | `colors = Theme.colorscheme`; `Theme.colors.surface0`; `Theme.colors.command_palette_bg` | `color_scheme = colors.color_scheme`; `color_schemes = colors.color_schemes`; `colors.accents.titlebar_bg`; `colors.accents.command_palette_bg` |
 | `config/tab.lua` | `Theme.colors.peach/green/red`; `Theme.colorscheme.tab_bar.active_tab.fg_color`; same for `inactive_tab` | `colors.accents.progress_indeterminate/progress_ok/progress_error`; `colors.accents.tab_active_fg`; `colors.accents.tab_inactive_fg` |
 | `utils/domain_launcher.lua` | `Theme.colors.overlay1` | `colors.accents.launcher_separator` |
+| `config/domains.lua` | `Theme.colors.{blue, yellow, green, mauve}` for domain kind icons | `colors.ansi.blue`, `colors.ansi.yellow`, `colors.ansi.green`, `colors.ansi.magenta` |
 | `colors/custom.lua` | exists | deleted |
 
 `config/appearance.lua` no longer sets `colors = …` (the inline override). It sets `color_scheme` (a name) and `color_schemes` (a registration table) — both come from `colors/init.lua`.
@@ -145,8 +147,19 @@ Single import everywhere: `local colors = require('colors')`.
 
 - OS-appearance-driven auto switching (light/dark by Windows mode).
 - Runtime keybinding to swap themes.
-- Domain icon colors in `config/domains.lua` — kept as-is; can be unified with accents in a separate refactor if needed.
 - Adding more themes; only Dracula+ migrates and one minimal `example_builtin.lua` ships as a working template.
+
+## Adjacent WIP absorbed
+
+The working tree currently has uncommitted changes that overlap with this refactor. They are folded into the implementation so the result is consistent:
+
+- `colors/custom.lua`: active-tab `underline` removed, `strikethrough = false`. Goes into `colors/themes/dracula_plus.lua`'s `scheme`.
+- `config/appearance.lua`: removed `backdrops` import (file deleted), `enable_scroll_bar = true`, uncommented `command_palette_bg_color`, `font_size = 12`, `inactive_pane_hsb` adjusted, `visual_bell.fade_in_duration_ms = 400`. Kept verbatim while the file is rewritten for the new theme API.
+- `config/appearance.lua`: dangling `-- background = backdrops:initial_options(true),` comment removed (the `backdrops` module no longer exists).
+- `config/domains.lua`: priority shuffle (wsl=10, local=20, ssh=30, unix=40). Kept; only the `Theme.colors.X` references migrate to `colors.ansi.X`.
+- `utils/backdrops.lua`: file deletion is staged together with this refactor as related cleanup.
+
+`config/bindings.lua` WIP changes are unrelated to colors and are left untouched in the working tree — the user will commit them separately.
 
 ## CLAUDE.md update
 

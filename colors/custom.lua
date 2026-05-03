@@ -72,9 +72,9 @@ local colorscheme = {
         active_tab = {
             bg_color = Theme.colors.base,
             fg_color = Theme.colors.blue,
-            underline = 'Single',
+            -- underline = 'Single',
             italic = false,
-            strikethrough = true,
+            strikethrough = false,
         },
         inactive_tab = {
             bg_color = Theme.colors.surface0,

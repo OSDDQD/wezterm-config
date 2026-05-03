@@ -13,9 +13,9 @@ local Theme = require('colors.custom')
 ---@type table<DomainKind, DomainKindMeta>
 -- stylua: ignore
 local kinds = {
-    ssh       = { priority = 10, icon = nf.cod_remote,             color = Theme.colors.blue,   label = 'SSH'   },
-    wsl       = { priority = 20, icon = nf.cod_terminal_ubuntu,    color = Theme.colors.yellow, label = 'WSL'   },
-    ['local'] = { priority = 30, icon = nf.cod_terminal,           color = Theme.colors.green,  label = 'LOCAL' },
+    ssh       = { priority = 30, icon = nf.cod_remote,             color = Theme.colors.blue,   label = 'SSH'   },
+    wsl       = { priority = 10, icon = nf.cod_terminal_ubuntu,    color = Theme.colors.yellow, label = 'WSL'   },
+    ['local'] = { priority = 20, icon = nf.cod_terminal,           color = Theme.colors.green,  label = 'LOCAL' },
     unix      = { priority = 40, icon = nf.cod_server_environment, color = Theme.colors.mauve,  label = 'UNIX'  },
 }
 

@@ -11,21 +11,13 @@ local mod = {
 local keys = {
     -- misc/useful --
     { key = 'F1',         mods = 'CTRL|SHIFT',  action = 'ActivateCopyMode' },
-    { key = 'F3',         mods = 'CTRL|SHIFT',  action = domain_launcher.action },
-    { key = 'R',         mods = mod.SUPER_REV,  action = act.ReloadConfiguration },
+    { key = 'R',         mods = 'CTRL|SHIFT',  action = domain_launcher.action },
+    { key = 'F5',         mods = mod.SUPER,  action = act.ReloadConfiguration },
     { key = 'F6',         mods = mod.SUPER_REV,  action = act.ShowDebugOverlay },
     { key = 'F11',        mods = 'NONE',        action = act.ToggleFullScreen },
 
     { key = 'p',          mods = 'CTRL|SHIFT',  action = act.ActivateCommandPalette },
     { key = 'f',          mods = 'CTRL|SHIFT',  action = act.Search({ CaseInSensitiveString = '' }) },
-
-    -- cursor movement --
-    { key = 'LeftArrow',  mods = mod.SUPER_REV, action = act.SendKey({ key = 'Home' }) },
-    { key = 'RightArrow', mods = mod.SUPER_REV, action = act.SendKey({ key = 'End' }) },
-    { key = 'Backspace',  mods = mod.SUPER_REV, action = act.SendKey({ key = 'u', mods = 'CTRL' }) },
-
-    { key = 'U',          mods = 'CTRL|SHIFT',  action = act.CharSelect },
-    { key = 'Space',  mods = mod.SUPER_REV, action = act.QuickSelect  },
 
     -- copy/paste --
     { key = 'c',          mods = 'CTRL|SHIFT',  action = act.CopyTo('Clipboard') },
@@ -72,21 +64,14 @@ local keys = {
     { key = 'PageUp',     mods = mod.SUPER,      action = act.ScrollByLine(-5) },
     { key = 'PageDown',   mods = mod.SUPER,      action = act.ScrollByLine(5) },
     { key = 'PageUp',     mods = mod.SUPER_REV,  action = act.ScrollByPage(-0.5) },
-    { key = 'PageDown',   mods = mod.SUPER_REV,  action = act.ScrollByPage(0.5) },
-
-    -- panes: split current pane (`\`/`-` echo the divider direction)
-    { key = '\\',         mods = 'CTRL|SHIFT',   action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
-    { key = '-',          mods = 'CTRL|SHIFT',   action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
+    { key = 'PageDown',   mods = mod.SUPER_REV, action = act.ScrollByPage(0.5) },
+    { key = 'DownArrow',   mods = mod.SUPER_REV,  action = act.ScrollToBottom },
 
     -- panes: focus navigation
     { key = 'LeftArrow',  mods = 'SHIFT|ALT',    action = act.ActivatePaneDirection('Left') },
     { key = 'DownArrow',  mods = 'SHIFT|ALT',    action = act.ActivatePaneDirection('Down') },
     { key = 'UpArrow',    mods = 'SHIFT|ALT',    action = act.ActivatePaneDirection('Up') },
     { key = 'RightArrow', mods = 'SHIFT|ALT',    action = act.ActivatePaneDirection('Right') },
-
-    -- panes: rotate pane positions (Leader+o / Leader+O)
-    { key = 'o',          mods = 'LEADER',       action = act.RotatePanes('Clockwise') },
-    { key = 'O',          mods = 'LEADER|SHIFT', action = act.RotatePanes('CounterClockwise') },
 
     -- panes: close current pane
     { key = 'x',          mods = 'CTRL|SHIFT',   action = act.CloseCurrentPane({ confirm = false }) },
@@ -119,7 +104,7 @@ local mouse_bindings = {
 
 return {
     disable_default_key_bindings = true,
-    -- disable_default_mouse_bindings = true,
+    disable_default_mouse_bindings = false,
     key_map_preference = 'Physical',
     leader = { key = 'Space', mods = mod.SUPER_REV },
     keys = keys,
