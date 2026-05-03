@@ -9,6 +9,10 @@ return {
     default_cursor_style = 'BlinkingBar',
     cursor_blink_rate = 600,
 
+    -- font
+    font_size = 12,
+    line_height = 1.1,
+
     -- color scheme
     color_scheme = colors.color_scheme,
     color_schemes = colors.color_schemes,
@@ -21,7 +25,7 @@ return {
     command_palette_font_size = 14,
     command_palette_rows = 10,
 
-    window_decorations = 'RESIZE',
+    window_decorations = 'RESIZE|INTEGRATED_BUTTONS',
 
     initial_cols = 100,
     initial_rows = 20,

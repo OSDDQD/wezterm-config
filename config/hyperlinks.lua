@@ -72,7 +72,7 @@ local function is_text(stdout, file_path)
     return false
 end
 
-wezterm.on('open-uri', function(window, pane, uri)
+wezterm.on('open-uri', function(_window, pane, uri)
     local editor = 'micro'
 
     if uri:find('^file:') ~= 1 or pane:is_alt_screen_active() then

@@ -1,0 +1,6 @@
+# WezTerm embeds Lua 5.4, but selene 0.30's `cargo install` build can't
+# resolve `std = "lua54"` (reports the stdlib as missing). We use lua51 —
+# the differences (bitwise ops, integer division, goto/labels) don't affect
+# the lints we care about here (unused vars, undefined globals, shadowing).
+# If selene later ships lua54 reliably, switch to it.
+std = "lua51"

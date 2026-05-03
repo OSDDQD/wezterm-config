@@ -25,7 +25,7 @@ local config = Config:init()
 
 Each `config/<name>.lua` returns a flat data table keyed by WezTerm option names. To add new options, create a new module (or edit an existing one) and chain it with `:append(require('config.<name>'))` in `wezterm.lua` — do not inline options in `wezterm.lua`. `Config:append()` warns on duplicate keys.
 
-Third-party plugins are wired in `config/plugins.lua` (which exports `apply(config)`) and applied to the built config table at the end of `wezterm.lua`. Add new plugins inside `M.apply`, not in the entry point.
+Third-party plugins are wired in `config/plugins.lua` (which exports `apply(config)`) and applied to the built config table at the end of `wezterm.lua`. Add new plugins inside `M.apply`, not in the entry point. When a plugin exposes a runtime API that other config modules need (e.g. `wezterm-attention`'s pane state), assign the plugin handle to `M.<name>` so consumers can `require('config.plugins').<name>` — that's the only sanctioned cross-module bridge.
 
 ## Color theming
 
@@ -62,8 +62,16 @@ Marking a different default: set `default = true` on exactly one entry; remove f
 
 ## Reserved keybindings
 
-Don't bind `Alt+Ctrl+D`, `Alt+Ctrl+V`, or `Alt+Ctrl+H` — the `quick_domains.wezterm` plugin (loaded via `config/plugins.lua`) claims them for domain attach / vsplit / hsplit.
+Don't bind `Alt+B` — the `wezterm-attention` plugin (loaded via `config/plugins.lua`) claims it for the review-toggle action.
+
+## wezterm-attention integration
+
+`config/plugins.lua` loads `wezterm-attention` with `renderer = 'manual'` so `config/tab.lua` keeps control over `format-tab-title`. The plugin handle is re-exported as `M.attention`; `config/tab.lua` reads pane state through `attention.get_attention(pane_id)` and renders the indicator glyph + background tint itself (it deliberately bypasses `attention.wrap_title_formatter`, which would hard-prepend the tab index to every title).
+
+Markers live in WSL at `$HOME/.local/state/wezterm-attention/$WEZTERM_PANE`. WezTerm runs on Windows and reads them via the UNC redirector `\\wsl.localhost\Ubuntu\...`; the path must be a long-bracket string (`[[...]]`) so the backslashes stay literal — the Windows CRT needs them to recognise the UNC prefix.
+
+`config/tab.lua` keeps local copies of the plugin's `THINKING_FRAMES`, `ATTENTION_GLYPH`, `ATTENTION_TINT`, and `ATTENTION_PRIORITY` constants. If you change one side, keep the other in sync — there's no compile-time check.
 
 ## Verifying changes
 
-No tests, no linter configured. Changes are validated by reloading the WezTerm config live (Ctrl+Shift+R) and watching for errors in the WezTerm log. Don't claim a change works without saying it hasn't been runtime-verified.
+No automated tests. Static checks: `stylua --check .` (format) and `selene .` (lint). The `/verify-wezterm` skill bundles those plus a headless `wezterm.exe` parse-check. For runtime verification, the user reloads the WezTerm config live (`Alt+F5`) and watches for errors in the WezTerm log — don't claim a change works without saying it hasn't been runtime-verified.

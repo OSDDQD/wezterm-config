@@ -1,6 +1,7 @@
 local wezterm = require('wezterm')
 local nf = wezterm.nerdfonts
 local colors = require('colors')
+local attention = require('config.plugins').attention
 
 -- When true, render our own tab title with process icon.
 local USE_CUSTOM_TAB_TITLE = true
@@ -28,6 +29,22 @@ local PCT_GLYPHS = {
     nf.md_circle_slice_1, nf.md_circle_slice_2, nf.md_circle_slice_3, nf.md_circle_slice_4,
     nf.md_circle_slice_5, nf.md_circle_slice_6, nf.md_circle_slice_7, nf.md_circle_slice_8,
 }
+
+-- wezterm-attention: indicator glyphs and tab background tints.
+-- We bypass `attention.wrap_title_formatter` because it hard-prepends
+-- `N: ` to every tab title. Instead we read the cached pane state via
+-- `attention.get_attention(pane_id)` and render the glyph + tint ourselves.
+-- Values mirror the plugin's defaults — keep in sync if either side changes.
+local THINKING_FRAMES = { '◌', '◔', '◑', '◕' }
+local ATTENTION_GLYPH = { stop = '✓', notify = '!', review = '◆' }
+local ATTENTION_TINT = {
+    thinking = '#1c1730',
+    stop = '#12271c',
+    notify = '#240f16',
+    review = '#1a1a0c',
+}
+-- Higher number = higher priority (matches plugin's ordering).
+local ATTENTION_PRIORITY = { thinking = 1, review = 2, stop = 3, notify = 4 }
 
 local function pct_glyph(pct)
     local slot = math.max(0, math.min(7, math.floor((pct or 0) / 12)))
@@ -90,40 +107,76 @@ local function get_dir_name(pane_title)
     return dir or pane_title
 end
 
+--- Resolve the highest-priority attention state across all panes in a tab.
+---@param tab table TabInformation passed to format-tab-title
+---@return string|nil glyph, string|nil tint
+local function format_attention(tab)
+    local best_type, best_frame, best_priority = nil, nil, 0
+    for _, p in ipairs(tab.panes or {}) do
+        local atype, frame = attention.get_attention(p.pane_id)
+        local prio = atype and ATTENTION_PRIORITY[atype] or 0
+        if prio > best_priority then
+            best_type, best_frame, best_priority = atype, frame, prio
+        end
+    end
+    if not best_type then
+        return nil
+    end
+    local glyph
+    if best_type == 'thinking' then
+        glyph = THINKING_FRAMES[((best_frame or 0) % #THINKING_FRAMES) + 1]
+    else
+        glyph = ATTENTION_GLYPH[best_type]
+    end
+    return glyph, ATTENTION_TINT[best_type]
+end
+
 if USE_CUSTOM_TAB_TITLE then
+    -- We deliberately don't use `attention.wrap_title_formatter`: it hard-prepends
+    -- `N: ` (tab index) to the title with no opt-out. Instead we ask the plugin's
+    -- public API for the cached state and render indicator + tint ourselves.
     wezterm.on('format-tab-title', function(tab)
         local dir = get_dir_name(tab.active_pane.title)
         local progress = format_progress(tab.active_pane.progress)
         local tab_fg = tab.is_active and colors.accents.tab_active_fg
             or colors.accents.tab_inactive_fg
 
+        local att_glyph, att_tint = format_attention(tab)
+        local prefix = att_glyph and (att_glyph .. ' ') or ''
+
         local accent = progress
 
+        local elements
         if accent then
-            return wezterm.format({
-                { Text = ' ' },
+            elements = {
+                { Text = ' ' .. prefix },
                 { Foreground = { Color = accent.color } },
                 { Text = accent.icon },
                 { Foreground = { Color = tab_fg } },
                 { Text = ' ' .. dir .. ' ' },
-            })
+            }
+        else
+            local domain_icon, domain_color = get_domain_icon(tab.active_pane.domain_name)
+            if domain_icon then
+                elements = {
+                    { Text = ' ' .. prefix },
+                    { Foreground = { Color = tab.is_active and domain_color or tab_fg } },
+                    { Text = domain_icon },
+                    { Foreground = { Color = tab_fg } },
+                    { Text = ' ' .. dir .. ' ' },
+                }
+            else
+                local icon = get_process_icon(tab.active_pane.foreground_process_name)
+                elements = {
+                    { Text = ' ' .. prefix .. icon .. ' ' .. dir .. ' ' },
+                }
+            end
         end
 
-        local domain_icon, domain_color = get_domain_icon(tab.active_pane.domain_name)
-        if domain_icon then
-            return wezterm.format({
-                { Text = ' ' },
-                { Foreground = { Color = tab.is_active and domain_color or tab_fg } },
-                { Text = domain_icon },
-                { Foreground = { Color = tab_fg } },
-                { Text = ' ' .. dir .. ' ' },
-            })
+        if att_tint then
+            table.insert(elements, 1, { Background = { Color = att_tint } })
         end
-
-        local icon = get_process_icon(tab.active_pane.foreground_process_name)
-        return wezterm.format({
-            { Text = ' ' .. icon .. ' ' .. dir .. ' ' },
-        })
+        return wezterm.format(elements)
     end)
 end
 
