@@ -27,7 +27,23 @@ Each `config/<name>.lua` returns a flat data table keyed by WezTerm option names
 
 Third-party plugins are wired in `config/plugins.lua` (which exports `apply(config)`) and applied to the built config table at the end of `wezterm.lua`. Add new plugins inside `M.apply`, not in the entry point.
 
-Color theming lives in `colors/`. Themes are files in `colors/themes/<name>.lua` returning either `{ name, scheme, accents }` (fully custom) or `{ builtin, accents? }` (any WezTerm built-in scheme). The active theme is picked by editing the single `ACTIVE` line in `colors/init.lua` — its value can be a `name` from a custom theme, the `builtin` of a registered theme, or any built-in WezTerm scheme name not declared locally. Modules consume colors only through `local colors = require('colors')` and read `colors.accents.<role>` (semantic, e.g. `progress_ok`, `tab_active_fg`), `colors.ansi.<name>` (e.g. `colors.ansi.blue`), or `colors.foreground`/`colors.background`; never reach into `colors.color_schemes` or any theme's internal palette. Don't inline hex values in `config/*.lua` — add the role to a theme's `accents` (or extend the accent contract in `colors/init.lua` if a new role is needed).
+## Color theming
+
+`colors/` is the only place that knows about colors. Layout:
+
+- `colors/init.lua` — registry. Lists every available theme in the `THEMES` table, picks the active one via `ACTIVE`, registers all type-A themes with WezTerm, and exports the consumer API.
+- `colors/themes/<name>.lua` — one theme per file. Two shapes are accepted: type A `{ name, scheme, accents }` (a fully custom WezTerm colorscheme) or type B `{ builtin, accents? }` (a WezTerm built-in scheme by name with optional accent overrides). Inside the file the author may keep a private palette of named hex literals for composing `scheme` and `accents`; nothing outside the file references that palette.
+
+To **switch** the active theme, edit the single `ACTIVE` line in `colors/init.lua`. The value is either a `name` from a registered theme, the `builtin` of a registered theme, or any built-in WezTerm scheme name not declared locally (in which case accents are auto-derived from the scheme's ansi/brights/tab_bar).
+
+To **add** a new local theme, drop a file in `colors/themes/<name>.lua` AND add it to the `THEMES` list in `colors/init.lua` — the registry is explicit, not file-system-scanned. Wrap each `require('colors.themes.<file>')` in parens; Lua 5.4's `require()` returns two values (module + filepath) and the trailing call without parens injects the filepath as a stray third entry, which breaks the registry.
+
+Modules consume colors only through `local colors = require('colors')` and read one of:
+- `colors.accents.<role>` — semantic accent (e.g. `progress_ok`, `tab_active_fg`, `launcher_separator`). Used for app-specific UI affordances. The full key list lives in `colors/init.lua`'s `fallback_accents`.
+- `colors.ansi.<name>` — one of the standard 8 ANSI hues (`black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`). Use this for shade-driven choices that should track any theme (e.g. domain icon colors).
+- `colors.foreground` / `colors.background` — the active scheme's text/background.
+
+Never reach into `colors.color_schemes` or any theme's internal palette from a consumer module. Don't inline hex values in `config/*.lua` or `utils/*.lua` — extend a theme's `accents`, or add a new accent role to the contract in `colors/init.lua` if no existing role fits.
 
 ## Domain taxonomy
 
