@@ -97,4 +97,6 @@ return {
     color_schemes = color_schemes,
     accents = accents,
     ansi = ansi,
+    foreground = resolved.foreground,
+    background = resolved.background,
 }

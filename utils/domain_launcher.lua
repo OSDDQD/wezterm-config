@@ -1,7 +1,7 @@
 local wezterm = require('wezterm')
 local act = wezterm.action
 local nf = wezterm.nerdfonts
-local Theme = require('colors.custom')
+local colors = require('colors')
 
 local M = {}
 
@@ -87,10 +87,10 @@ local function build_choices(entries, kinds)
         table.insert(choices, {
             id = '__sep_' .. kind,
             label = wezterm.format({
-                { Foreground = { Color = Theme.colors.overlay1 } },
+                { Foreground = { Color = colors.accents.launcher_separator } },
                 { Foreground = { Color = meta_kind.color } },
                 { Text = meta_kind.icon .. '  ' .. meta_kind.label },
-                { Foreground = { Color = Theme.colors.overlay1 } },
+                { Foreground = { Color = colors.accents.launcher_separator } },
             }),
         })
 
@@ -110,15 +110,15 @@ local function build_choices(entries, kinds)
             local spans = {
                 { Foreground = { Color = meta_kind.color } },
                 { Text = '  ' .. meta_kind.icon .. '  ' },
-                { Foreground = { Color = Theme.colors.text } },
+                { Foreground = { Color = colors.foreground } },
                 { Text = e.name },
                 { Text = pad_after_name },
-                { Foreground = { Color = Theme.colors.overlay1 } },
+                { Foreground = { Color = colors.accents.launcher_separator } },
                 { Text = meta },
             }
             if e.default then
                 table.insert(spans, { Text = '   ' })
-                table.insert(spans, { Foreground = { Color = Theme.colors.peach } })
+                table.insert(spans, { Foreground = { Color = colors.ansi.yellow } })
                 table.insert(spans, { Text = '★' })
             end
             table.insert(choices, {
@@ -137,7 +137,7 @@ local function pick_target(window, pane, mode)
     window:perform_action(
         act.InputSelector({
             title = wezterm.format({
-                { Foreground = { Color = Theme.colors.blue } },
+                { Foreground = { Color = colors.ansi.blue } },
                 { Text = ' ' .. nf.cod_terminal .. '  Domain (' .. mode .. ')' },
             }),
             fuzzy = true,
@@ -168,7 +168,7 @@ local function mode_choice(id, icon, icon_color, text)
         label = wezterm.format({
             { Foreground = { Color = icon_color } },
             { Text = ' ' .. icon .. '  ' },
-            { Foreground = { Color = Theme.colors.text } },
+            { Foreground = { Color = colors.foreground } },
             { Text = text },
         }),
     }
@@ -178,7 +178,7 @@ end
 ---Bind it from config.bindings like any other action.
 M.action = wezterm.action_callback(function(window, pane)
     local title = wezterm.format({
-        { Foreground = { Color = Theme.colors.blue } },
+        { Foreground = { Color = colors.ansi.blue } },
         { Text = nf.cod_terminal_powershell .. '  Spawn mode' },
     })
 
@@ -187,14 +187,14 @@ M.action = wezterm.action_callback(function(window, pane)
             title = title,
             fuzzy = true,
             choices = {
-                mode_choice('tab', nf.md_plus_box_outline, Theme.colors.blue, 'New Tab'),
+                mode_choice('tab', nf.md_plus_box_outline, colors.ansi.blue, 'New Tab'),
                 mode_choice(
                     'hsplit',
                     nf.cod_split_horizontal,
-                    Theme.colors.peach,
+                    colors.ansi.yellow,
                     'Horizontal Split'
                 ),
-                mode_choice('vsplit', nf.cod_split_vertical, Theme.colors.mauve, 'Vertical Split'),
+                mode_choice('vsplit', nf.cod_split_vertical, colors.ansi.magenta, 'Vertical Split'),
             },
             action = wezterm.action_callback(function(inner_window, inner_pane, id, _label)
                 if not id then
