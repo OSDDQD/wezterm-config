@@ -1,6 +1,6 @@
 local wezterm = require('wezterm')
 local nf = wezterm.nerdfonts
-local Theme = require('colors.custom')
+local colors = require('colors')
 
 ---@alias DomainKind 'ssh' | 'wsl' | 'local' | 'unix'
 
@@ -13,10 +13,10 @@ local Theme = require('colors.custom')
 ---@type table<DomainKind, DomainKindMeta>
 -- stylua: ignore
 local kinds = {
-    ssh       = { priority = 30, icon = nf.cod_remote,             color = Theme.colors.blue,   label = 'SSH'   },
-    wsl       = { priority = 10, icon = nf.cod_terminal_ubuntu,    color = Theme.colors.yellow, label = 'WSL'   },
-    ['local'] = { priority = 20, icon = nf.cod_terminal,           color = Theme.colors.green,  label = 'LOCAL' },
-    unix      = { priority = 40, icon = nf.cod_server_environment, color = Theme.colors.mauve,  label = 'UNIX'  },
+    ssh       = { priority = 30, icon = nf.cod_remote,             color = colors.ansi.blue,    label = 'SSH'   },
+    wsl       = { priority = 10, icon = nf.cod_terminal_ubuntu,    color = colors.ansi.yellow,  label = 'WSL'   },
+    ['local'] = { priority = 20, icon = nf.cod_terminal,           color = colors.ansi.green,   label = 'LOCAL' },
+    unix      = { priority = 40, icon = nf.cod_server_environment, color = colors.ansi.magenta, label = 'UNIX'  },
 }
 
 ---@class DomainEntry
