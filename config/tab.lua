@@ -1,6 +1,6 @@
 local wezterm = require('wezterm')
 local nf = wezterm.nerdfonts
-local Theme = require('colors.custom')
+local colors = require('colors')
 
 -- When true, render our own tab title with process icon.
 local USE_CUSTOM_TAB_TITLE = true
@@ -42,14 +42,14 @@ local function format_progress(progress)
         return nil
     end
     if progress == 'Indeterminate' then
-        return { icon = nf.md_dots_horizontal, color = Theme.colors.peach }
+        return { icon = nf.md_dots_horizontal, color = colors.accents.progress_indeterminate }
     end
     if type(progress) == 'table' then
         if progress.Percentage ~= nil then
-            return { icon = pct_glyph(progress.Percentage), color = Theme.colors.green }
+            return { icon = pct_glyph(progress.Percentage), color = colors.accents.progress_ok }
         end
         if progress.Error ~= nil then
-            return { icon = pct_glyph(progress.Error), color = Theme.colors.red }
+            return { icon = pct_glyph(progress.Error), color = colors.accents.progress_error }
         end
     end
     return nil
@@ -95,8 +95,8 @@ if USE_CUSTOM_TAB_TITLE then
         local dir = get_dir_name(tab.active_pane.title)
         local progress = format_progress(tab.active_pane.progress)
         local intensity = tab.is_active and 'Bold' or 'Half'
-        local tab_fg = tab.is_active and Theme.colorscheme.tab_bar.active_tab.fg_color
-            or Theme.colorscheme.tab_bar.inactive_tab.fg_color
+        local tab_fg = tab.is_active and colors.accents.tab_active_fg
+            or colors.accents.tab_inactive_fg
 
         local accent = progress
 
