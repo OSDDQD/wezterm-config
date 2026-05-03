@@ -27,7 +27,7 @@ Each `config/<name>.lua` returns a flat data table keyed by WezTerm option names
 
 Third-party plugins are wired in `config/plugins.lua` (which exports `apply(config)`) and applied to the built config table at the end of `wezterm.lua`. Add new plugins inside `M.apply`, not in the entry point.
 
-Color literals belong in `colors/custom.lua` (`Theme.colors`) — the colorscheme and other modules reference them by name. Don't inline new hex values in `config/*.lua`; add a named entry to the palette and reference it.
+Color theming lives in `colors/`. Themes are files in `colors/themes/<name>.lua` returning either `{ name, scheme, accents }` (fully custom) or `{ builtin, accents? }` (any WezTerm built-in scheme). The active theme is picked by editing the single `ACTIVE` line in `colors/init.lua` — its value can be a `name` from a custom theme, the `builtin` of a registered theme, or any built-in WezTerm scheme name not declared locally. Modules consume colors only through `local colors = require('colors')` and read `colors.accents.<role>` (semantic, e.g. `progress_ok`, `tab_active_fg`), `colors.ansi.<name>` (e.g. `colors.ansi.blue`), or `colors.foreground`/`colors.background`; never reach into `colors.color_schemes` or any theme's internal palette. Don't inline hex values in `config/*.lua` — add the role to a theme's `accents` (or extend the accent contract in `colors/init.lua` if a new role is needed).
 
 ## Domain taxonomy
 
