@@ -4,5 +4,5 @@
 -- accent keys; missing keys fall back to values derived from the scheme's
 -- ansi/brights/tab_bar.
 return {
-    builtin = 'Builtin Solarized Dark',
+    builtin = 'Dark+',
 }
