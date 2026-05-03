@@ -26,15 +26,18 @@ return {
     initial_cols = 100,
     initial_rows = 20,
     window_padding = {
-        left = '1pt',
-        right = '1pt',
-        top = '0',
-        bottom = '0',
+        left = '4pt',
+        right = '4pt',
+        top = '4pt',
+        bottom = '5pt',
     },
     adjust_window_size_when_changing_font_size = false,
     window_close_confirmation = 'NeverPrompt',
     window_frame = {
-        font = wezterm.font_with_fallback({ 'Segoe UI', 'Symbols Nerd Font Mono' }),
+        font = wezterm.font_with_fallback({
+            { family = 'Segoe UI' },
+            'Symbols Nerd Font Mono',
+        }),
         font_size = 12,
         inactive_titlebar_bg = colors.accents.titlebar_bg,
         active_titlebar_bg = colors.accents.titlebar_bg,

@@ -94,7 +94,6 @@ if USE_CUSTOM_TAB_TITLE then
     wezterm.on('format-tab-title', function(tab)
         local dir = get_dir_name(tab.active_pane.title)
         local progress = format_progress(tab.active_pane.progress)
-        local intensity = tab.is_active and 'Bold' or 'Half'
         local tab_fg = tab.is_active and colors.accents.tab_active_fg
             or colors.accents.tab_inactive_fg
 
@@ -106,7 +105,6 @@ if USE_CUSTOM_TAB_TITLE then
                 { Foreground = { Color = accent.color } },
                 { Text = accent.icon },
                 { Foreground = { Color = tab_fg } },
-                { Attribute = { Intensity = intensity } },
                 { Text = ' ' .. dir .. ' ' },
             })
         end
@@ -118,14 +116,12 @@ if USE_CUSTOM_TAB_TITLE then
                 { Foreground = { Color = tab.is_active and domain_color or tab_fg } },
                 { Text = domain_icon },
                 { Foreground = { Color = tab_fg } },
-                { Attribute = { Intensity = intensity } },
                 { Text = ' ' .. dir .. ' ' },
             })
         end
 
         local icon = get_process_icon(tab.active_pane.foreground_process_name)
         return wezterm.format({
-            { Attribute = { Intensity = intensity } },
             { Text = ' ' .. icon .. ' ' .. dir .. ' ' },
         })
     end)

@@ -22,7 +22,7 @@ local palette = {
     overlay0           = '#636363',
     surface2           = '#545454',
     surface1           = '#3B3B3B',
-    surface0           = '#21222C',
+    surface0           = '#2E2E2E',
     base               = '#000000',
     mantle             = '#ffffff',
     crust              = '#121212',
@@ -75,11 +75,11 @@ local scheme = {
         },
         inactive_tab = {
             bg_color = palette.surface0,
-            fg_color = palette.overlay1,
+            fg_color = palette.subtext0,
         },
         inactive_tab_hover = {
             bg_color = palette.surface0,
-            fg_color = palette.subtext1,
+            fg_color = palette.text,
         },
         new_tab = {
             bg_color = palette.crust,
@@ -99,7 +99,8 @@ local accents = {
     progress_ok            = palette.green,
     progress_error         = palette.red,
     tab_active_fg          = palette.blue,
-    tab_inactive_fg        = palette.overlay1,
+    tab_inactive_fg        = palette.subtext0,
+    tab_active_bg          = palette.base,
     titlebar_bg            = palette.surface0,
     command_palette_bg     = palette.command_palette_bg,
     launcher_separator     = palette.overlay1,

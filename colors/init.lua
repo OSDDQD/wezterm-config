@@ -10,7 +10,7 @@ local THEMES = {
 
 -- Active theme. Either a `name` from one of the THEMES entries (e.g. 'Dracula+'),
 -- or any built-in WezTerm scheme name not declared in THEMES (e.g. 'Tokyo Night').
-local ACTIVE = 'Dark+'
+local ACTIVE = 'Dracula+'
 
 local function nilsafe(t, ...)
     for _, k in ipairs({ ... }) do
