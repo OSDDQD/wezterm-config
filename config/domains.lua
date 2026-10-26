@@ -2,7 +2,7 @@ local wezterm = require('wezterm')
 local nf = wezterm.nerdfonts
 local colors = require('colors')
 
----@alias DomainKind 'ssh' | 'wsl' | 'local' | 'unix'
+---@alias DomainKind 'ssh' | 'local' | 'unix'
 
 ---@class DomainKindMeta
 ---@field priority integer    -- меньше = выше в меню
@@ -13,30 +13,25 @@ local colors = require('colors')
 ---@type table<DomainKind, DomainKindMeta>
 -- stylua: ignore
 local kinds = {
-    ['local'] = { priority = 20, icon = nf.cod_terminal,           color = colors.ansi.green,   label = 'LOCAL' },
-    wsl       = { priority = 10, icon = nf.cod_terminal_ubuntu,    color = colors.ansi.yellow,  label = 'WSL'   },
-    ssh       = { priority = 30, icon = nf.cod_remote,             color = colors.ansi.blue,    label = 'SSH'   },
-    unix      = { priority = 40, icon = nf.cod_server_environment, color = colors.ansi.magenta, label = 'UNIX'  },
+    ['local'] = { priority = 10, icon = nf.cod_terminal,           color = colors.ansi.green,   label = 'LOCAL' },
+    ssh       = { priority = 20, icon = nf.cod_remote,             color = colors.ansi.blue,    label = 'SSH'   },
+    unix      = { priority = 30, icon = nf.cod_server_environment, color = colors.ansi.magenta, label = 'UNIX'  },
 }
 
 ---@class DomainEntry
 ---@field kind DomainKind
 ---@field name string
 --- ssh:   remote_address, username, port?, multiplexing?, assume_shell?
---- wsl:   distribution, username?, default_cwd?, default_prog?
 --- local: args, cwd?
 --- unix:  socket_path?, no_serve_automatically?
 
 ---Single source of truth for everything spawnable.
 ---The launcher (config.domain_launcher) reads the filtered list back via wezterm.GLOBAL.
+---Без default-записи WezTerm берёт $SHELL (см. CLAUDE.md).
 ---@type DomainEntry[]
 local entries = {
-    -- stylua: ignore start
-    { kind = 'wsl',   name = 'WSL:Ubuntu', distribution = 'Ubuntu', username = 'osddqd', default_cwd = '/home/osddqd', default = true },
-    { kind = 'local', name = 'Command Prompt',        args = { 'cmd.exe' } },
-    { kind = 'local', name = 'PowerShell',       args = { 'pwsh.exe', '-NoLogo' } },
-    { kind = 'local', name = 'PowerShell v1', args = { 'powershell.exe' } },
-    -- stylua: ignore end
+    -- command = bash --login, как в Ghostty: .bash_profile сам уходит в fish
+    { kind = 'local', name = 'bash', args = { 'bash', '--login' }, default = true },
 }
 
 -- auto-enumerate SSH hosts from ~/.ssh/config
@@ -45,7 +40,9 @@ for host, info in pairs(wezterm.enumerate_ssh_hosts()) do
         table.insert(entries, {
             kind = 'ssh',
             name = host,
-            remote_address = info.hostname or host,
+            -- Алиас, а не HostName: по алиасу WezTerm берёт из ~/.ssh/config весь
+            -- блок Host (IdentityFile, Port и т. п.), по HostName — нет.
+            remote_address = host,
             username = info.user,
             multiplexing = 'None',
             assume_shell = 'Posix',
@@ -98,7 +95,7 @@ wezterm.GLOBAL.domain_entries = filtered
 wezterm.GLOBAL.domain_kinds = kinds
 
 -- project filtered entries into wezterm-native option tables
-local ssh_domains, wsl_domains, unix_domains, launch_menu = {}, {}, {}, {}
+local ssh_domains, unix_domains, launch_menu = {}, {}, {}
 
 for _, e in ipairs(filtered) do
     if e.kind == 'ssh' then
@@ -108,14 +105,6 @@ for _, e in ipairs(filtered) do
             username = e.username,
             multiplexing = e.multiplexing or 'None',
             assume_shell = e.assume_shell or 'Posix',
-        })
-    elseif e.kind == 'wsl' then
-        table.insert(wsl_domains, {
-            name = e.name,
-            distribution = e.distribution,
-            username = e.username,
-            default_cwd = e.default_cwd,
-            default_prog = e.default_prog,
         })
     elseif e.kind == 'unix' then
         table.insert(unix_domains, {
@@ -135,7 +124,6 @@ end
 
 local result = {
     ssh_domains = ssh_domains,
-    wsl_domains = wsl_domains,
     unix_domains = unix_domains,
     launch_menu = launch_menu,
 }

@@ -79,18 +79,15 @@ wezterm.on('open-uri', function(_window, pane, uri)
         return
     end
 
-    local distro = (pane:get_domain_name() or ''):match('^WSL:(.+)$')
-    if not distro then
+    -- Открываем только локальные ссылки (ssh/unix-домены отдают xdg-open'у).
+    local domain = pane:get_domain_name() or ''
+    if domain ~= '' and domain ~= 'local' then
         return
     end
 
     local url = wezterm.url.parse(uri)
 
     local success, stdout, _ = wezterm.run_child_process({
-        'wsl.exe',
-        '-d',
-        distro,
-        '--',
         'file',
         '--brief',
         '--mime-type',

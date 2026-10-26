@@ -5,12 +5,13 @@ local wezterm = require('wezterm')
 -- a stray third entry.
 local THEMES = {
     (require('colors.themes.dracula_plus')),
+    (require('colors.themes.kitty_default')),
     (require('colors.themes.example_builtin')),
 }
 
 -- Active theme. Either a `name` from one of the THEMES entries (e.g. 'Dracula+'),
 -- or any built-in WezTerm scheme name not declared in THEMES (e.g. 'Tokyo Night').
-local ACTIVE = 'Dracula+'
+local ACTIVE = 'Kitty Default'
 
 local function nilsafe(t, ...)
     for _, k in ipairs({ ... }) do
@@ -77,8 +78,12 @@ local fallback_accents = {
     tab_active_fg          = nilsafe(resolved, 'tab_bar', 'active_tab', 'fg_color')   or resolved.foreground,
     tab_inactive_fg        = nilsafe(resolved, 'tab_bar', 'inactive_tab', 'fg_color') or resolved.foreground,
     titlebar_bg            = nilsafe(resolved, 'tab_bar', 'inactive_tab', 'bg_color') or resolved.background,
+    titlebar_fg            = resolved.foreground,
+    titlebar_border        = resolved.split or resolved.brights[1],
     command_palette_bg     = resolved.background,
+    command_palette_fg     = resolved.foreground,
     launcher_separator     = resolved.brights[1],
+    bell_indicator         = resolved.ansi[4],
 }
 
 local accents = {}
@@ -102,4 +107,6 @@ return {
     ansi = ansi,
     foreground = resolved.foreground,
     background = resolved.background,
+    -- fancy tab bar читает цвета вкладок только из config.colors, не из схемы
+    tab_bar = resolved.tab_bar,
 }

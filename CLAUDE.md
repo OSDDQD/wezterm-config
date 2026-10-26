@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Personal WezTerm config. Lua only. Targets Windows WezTerm running with a WSL:Ubuntu domain (user `osddqd`).
+Personal WezTerm config. Lua only. Targets native Ubuntu Linux (user `osddqd`). The `main` branch carries the Windows + WSL variant; this `ubuntu` branch is the native Linux adaptation.
 
 ## Code style
 
@@ -49,7 +49,7 @@ Never reach into `colors.color_schemes` or any theme's internal palette from a c
 
 `config/domains.lua` is the single source of truth for everything spawnable. Two tables:
 
-- `entries` — concrete spawnable items (`{ kind, name, ...kind-specific fields }`). One entry may carry `default = true`; that entry becomes WezTerm's default (`default_domain` for ssh/wsl/unix, `default_prog` for local).
+- `entries` — concrete spawnable items (`{ kind, name, ...kind-specific fields }`). Currently only SSH hosts are auto-enumerated from `~/.ssh/config`; the `entries` list itself starts empty. One entry may carry `default = true`; that entry becomes WezTerm's default (`default_domain` for ssh/unix, `default_prog` for local). If no entry is marked `default`, WezTerm falls back to `$SHELL`.
 - `kinds` — metadata per `kind`: `priority` (group order in launcher; smaller = higher), `icon` (Nerd Font glyph used in launcher and tab bar), `color` (palette ref for the group separator and the domain icon in tabs), `label` (group heading text).
 
 Both are exposed as `wezterm.GLOBAL.domain_entries` / `wezterm.GLOBAL.domain_kinds`. The launcher (`utils/domain_launcher.lua`) and the tab title resolver (`config/tab.lua`) read these globals — no other modules depend on them.
@@ -62,16 +62,16 @@ Marking a different default: set `default = true` on exactly one entry; remove f
 
 ## Reserved keybindings
 
-Don't bind `Alt+B` — the `wezterm-attention` plugin (loaded via `config/plugins.lua`) claims it for the review-toggle action.
+Keybindings mirror Ghostty (`ghostty +list-keybinds` on the same machine): `config/bindings.lua` ports `~/.config/ghostty/keybinds` plus Ghostty's defaults. With `key_map_preference = 'Physical'` every letter binding matches the physical key, so it works in the Russian layout. The generated loop at the end of `keys` makes `CTRL+<letter>` send the control code and `ALT[+SHIFT]+<letter>` send ESC+letter on every layout (the WezTerm equivalent of Ghostty's cyrillic `text:`/`esc:` binds); letters taken by actions (`CTRL+T` = new tab) are listed in `taken_ctrl`. `wezterm-attention` is currently not loaded, so `Alt+B` is just Meta-b.
 
 ## wezterm-attention integration
 
 `config/plugins.lua` loads `wezterm-attention` with `renderer = 'manual'` so `config/tab.lua` keeps control over `format-tab-title`. The plugin handle is re-exported as `M.attention`; `config/tab.lua` reads pane state through `attention.get_attention(pane_id)` and renders the indicator glyph + background tint itself (it deliberately bypasses `attention.wrap_title_formatter`, which would hard-prepend the tab index to every title).
 
-Markers live in WSL at `$HOME/.local/state/wezterm-attention/$WEZTERM_PANE`. WezTerm runs on Windows and reads them via the UNC redirector `\\wsl.localhost\Ubuntu\...`; the path must be a long-bracket string (`[[...]]`) so the backslashes stay literal — the Windows CRT needs them to recognise the UNC prefix.
+Markers live at `$HOME/.local/state/wezterm-attention/$WEZTERM_PANE` (`MARKER_DIR = wezterm.home_dir .. '/.local/state/wezterm-attention'`). Claude Code hooks write markers there and WezTerm reads them natively — no path redirection.
 
 `config/tab.lua` keeps local copies of the plugin's `THINKING_FRAMES`, `ATTENTION_GLYPH`, `ATTENTION_TINT`, and `ATTENTION_PRIORITY` constants. If you change one side, keep the other in sync — there's no compile-time check.
 
 ## Verifying changes
 
-No automated tests. Static checks: `stylua --check .` (format) and `selene .` (lint). The `/verify-wezterm` skill bundles those plus a headless `wezterm.exe` parse-check. For runtime verification, the user reloads the WezTerm config live (`Alt+F5`) and watches for errors in the WezTerm log — don't claim a change works without saying it hasn't been runtime-verified.
+No automated tests. Static checks: `stylua --check .` (format) and `selene .` (lint). The `/verify-wezterm` skill bundles those plus a headless `wezterm` parse-check. For runtime verification, the user reloads the WezTerm config live (`Alt+F5`) and watches for errors in the WezTerm log — don't claim a change works without saying it hasn't been runtime-verified.
